@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "phasorClass.h"
 #include "ofxDatGui.h"
+#include "ofxSyphon.h"
 
 static const int NUM_BARS = 12;
 static const int PIXEL_X_BAR = 432;
@@ -27,7 +28,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     
-    void onSliderEvent(ofxDatGuiSliderEvent e);
+    void onGuiSliderEvent(ofxDatGuiSliderEvent e);
+    void onGuiButtonEvent(ofxDatGuiButtonEvent e);
     
     
     int pixelNum;
@@ -41,7 +43,9 @@ class ofApp : public ofBaseApp{
     ofxDatGui* gui;
     ofxDatGuiWaveMonitor* plotter;
     
-    ofParameter<float> freq, hFreq;
+    ofParameter<float> freq, hFreq, powVal;
+    
+    ofxSyphonServer syphonServer;
     
 		
 };

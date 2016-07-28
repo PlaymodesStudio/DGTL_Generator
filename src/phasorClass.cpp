@@ -24,8 +24,12 @@ float phasorClass::getPhasor(){
     return phasor;
 }
 
+void phasorClass::resetPhasor(float phase){
+    phasor = phase;
+}
 
 void phasorClass::audioIn(float * input, int bufferSize, int nChannels){    
     phasor += (1./(((float)44100/(float)512)/(freq)));
     if ( phasor >= 1.0 ) phasor -= 1.0;
 }
+

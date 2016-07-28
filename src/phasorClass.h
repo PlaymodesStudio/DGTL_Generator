@@ -12,7 +12,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxMaxim.h"
 #include "ofEvents.h"
 
 class phasorClass: public ofBaseSoundInput{
@@ -23,6 +22,7 @@ public:
     
     void setFrequency(float frequency){freq = frequency;};
     float getPhasor();
+    void resetPhasor(float phase);
     
     void audioIn(float * input, int bufferSize, int nChannels);
     

@@ -1,2 +1,2 @@
 ofxDatGui_PM
-ofxMaxim
+ofxSyphon
