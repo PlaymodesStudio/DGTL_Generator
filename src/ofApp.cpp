@@ -29,6 +29,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     float w = phasor.getPhasor()*2*PI;
+    cout<<phasor.getPhasor()<<endl;
     for (int i = 0; i < pixelNum ; i++){
         float k = i*hFreq/pixelNum;
         float val = sin(w+k);

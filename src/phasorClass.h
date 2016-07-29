@@ -30,6 +30,11 @@ private:
     float phasor;
     float freq;
     float timestamp;
+    float initPhase;
+    float phasorMod;
+    
+    int quantization;
+    float holdTime; //The duration of the hold in percentage (0.5) --> 50% of the cycle is the phase in initPhase
     
     ofSoundStream soundStream;
 };
