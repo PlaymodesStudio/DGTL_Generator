@@ -9,6 +9,23 @@
 #ifndef elementOscilator_h
 #define elementOscilator_h
 
-#include <stdio.h>
+#include "ofMain.h"
+
+class elementOscilator{
+public:
+    elementOscilator();
+    ~elementOscilator(){};
+    
+    float computeFunc(float phasor, int index);
+    
+private:
+    //Parameters
+    float freq_Param; //Desphase Quantity
+    int pow_Param; //Pow of the funcion, working on sin, cos....
+    int indexCount_Param; //The max number you will get from index
+    
+
+    
+};
 
 #endif /* elementOscilator_h */

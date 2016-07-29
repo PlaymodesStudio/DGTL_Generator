@@ -28,17 +28,21 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    float w = phasor.getPhasor()*2*PI;
+//    float w = phasor.getPhasor()*2*PI;
+//    for (int i = 0; i < pixelNum ; i++){
+//        float k = i*hFreq/pixelNum;
+//        float val = sin(w+k);
+//        val /= 2;
+//        val += 0.5;
+//        val = pow(val, powVal);
+//        infoVec[i] = val;
+//    }
+//
+    
     cout<<phasor.getPhasor()<<endl;
     for (int i = 0; i < pixelNum ; i++){
-        float k = i*hFreq/pixelNum;
-        float val = sin(w+k);
-        val /= 2;
-        val += 0.5;
-        val = pow(val, powVal);
-        infoVec[i] = val;
+        infoVec[i] = singleGenerator.computeFunc(phasor.getPhasor(), i);
     }
-    
     
     pixelContent.begin();
     for (int i = 0; i < pixelContent.getWidth() ; i++){

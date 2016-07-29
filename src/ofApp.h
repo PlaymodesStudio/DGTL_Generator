@@ -4,6 +4,7 @@
 #include "phasorClass.h"
 #include "ofxDatGui.h"
 #include "ofxSyphon.h"
+#include "elementOscilator.h"
 
 static const int NUM_BARS = 12;
 static const int PIXEL_X_BAR = 432;
@@ -46,6 +47,9 @@ class ofApp : public ofBaseApp{
     ofParameter<float> freq, hFreq, powVal;
     
     ofxSyphonServer syphonServer;
+    
+    
+    elementOscilator singleGenerator;
     
 		
 };
