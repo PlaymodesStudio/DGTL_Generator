@@ -15,31 +15,22 @@ void ofApp::setup(){
     phasor.setup();
     
     gui = new ofxDatGui();
+    gui->addHeader();
+    gui->addLabel("Main Config");
     gui->addSlider(freq.set("Frequency", 1, 0, 10));
-    gui->addSlider(hFreq.set("Horizontal Frequency", 6, 0, PIXEL_X_BAR+1));
-    gui->addSlider(powVal.set("Pow", 1, 1, 400));
-    gui->addSlider("pixelNum", 1, PIXEL_X_BAR, 144)->setPrecision(0);
     gui->addBreak();
+    gui->addLabel("Phasor Parameters");
+    gui->addSlider("pixelNum", 1, PIXEL_X_BAR, 144)->setPrecision(0);
     gui->addSlider("Initial Phase", 0, 1, 0)->setPrecision(2);
     gui->addButton("Reset Phase");
     gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
     gui->onButtonEvent(this, &ofApp::onGuiButtonEvent);
+    
+    singleGenerator.setup();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-//    float w = phasor.getPhasor()*2*PI;
-//    for (int i = 0; i < pixelNum ; i++){
-//        float k = i*hFreq/pixelNum;
-//        float val = sin(w+k);
-//        val /= 2;
-//        val += 0.5;
-//        val = pow(val, powVal);
-//        infoVec[i] = val;
-//    }
-//
-    
-    cout<<phasor.getPhasor()<<endl;
     for (int i = 0; i < pixelNum ; i++){
         infoVec[i] = singleGenerator.computeFunc(phasor.getPhasor(), i);
     }
@@ -59,13 +50,20 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofSetColor(255);
-    pixelContent.draw(0,0, ofGetWidth(), ofGetHeight()/2);
+    
+    
+    
+    pixelContent.draw(0,0, ofGetWidth(), 5*ofGetHeight()/11);
     
     float wid = (float)ofGetWidth()/pixelNum;
-    float hei = ofGetHeight()/2;
-    for(int i = 0; i < pixelNum; i++){
-        ofDrawRectangle(i*wid, (1-infoVec[i])*hei+hei, wid, ofGetHeight()-infoVec[i]*hei);
-    }
+    float hei = 5*ofGetHeight()/11;
+    for(int i = 0; i < pixelNum; i++)
+        ofDrawRectangle(i*wid, (1-infoVec[i])*hei+hei, wid, infoVec[i]*hei);
+    
+    
+    ofDrawTriangle(0, ofGetHeight(), ofGetWidth(), ofGetHeight(), ofGetWidth(), 10*ofGetHeight()/11);
+    ofSetColor(127);
+    ofDrawRectangle((float)ofGetWidth() * phasor.getPhasor(), 10*ofGetHeight()/11, 5, ofGetHeight()/11);
     
     ofSetColor(255, 0,0);
     ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, ofGetHeight()-20);
@@ -133,6 +131,10 @@ void ofApp::onGuiSliderEvent(ofxDatGuiSliderEvent e){
     if(e.target->getName() == "pixelNum"){
         //change pixelNum val
         pixelNum = e.value;
+        
+        //update pixelNum in GenerativeFunc
+        singleGenerator.setIndexCount(pixelNum);
+        
         //Change vector storing values size
         infoVec.clear();
         infoVec.reserve(pixelNum);
