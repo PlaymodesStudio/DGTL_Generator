@@ -14,17 +14,17 @@ void ofApp::setup(){
     pixelContent.allocate(PIXEL_X_BAR, NUM_BARS, GL_RGB);
     phasor.setup();
     
-    gui = new ofxDatGui();
-    gui->addHeader();
-    gui->addLabel("Main Config");
-    gui->addSlider(freq.set("Frequency", 1, 0, 10));
-    gui->addBreak();
-    gui->addLabel("Phasor Parameters");
-    gui->addSlider("pixelNum", 1, PIXEL_X_BAR, 144)->setPrecision(0);
-    gui->addSlider("Initial Phase", 0, 1, 0)->setPrecision(2);
-    gui->addButton("Reset Phase");
-    gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
-    gui->onButtonEvent(this, &ofApp::onGuiButtonEvent);
+//    gui = new ofxDatGui();
+//    gui->addHeader();
+//    gui->addLabel("Main Config");
+//    gui->addSlider(freq.set("Frequency", 1, 0, 10));
+//    gui->addBreak();
+//    gui->addLabel("Phasor Parameters");
+//    gui->addSlider("pixelNum", 1, PIXEL_X_BAR, 144)->setPrecision(0);
+//    gui->addSlider("Initial Phase", 0, 1, 0)->setPrecision(2);
+//    gui->addButton("Reset Phase");
+//    gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
+//    gui->onButtonEvent(this, &ofApp::onGuiButtonEvent);
     
     singleGenerator.setup();
 }

@@ -7,7 +7,7 @@
 #include "elementOscilator.h"
 
 static const int NUM_BARS = 12;
-static const int PIXEL_X_BAR = 432;
+static const int PIXEL_X_BAR = 144;
 
 class ofApp : public ofBaseApp{
 

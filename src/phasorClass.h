@@ -12,7 +12,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofEvents.h"
+#include "ofxDatGui.h"
 
 class phasorClass: public ofBaseSoundInput{
 public:
@@ -20,21 +20,24 @@ public:
     ~phasorClass(){};
     void setup();
     
-    void setFrequency(float frequency){freq = frequency;};
+    void setFrequency(float frequency){freq_Param = frequency;};
     float getPhasor();
     void resetPhasor(float phase);
     
     void audioIn(float * input, int bufferSize, int nChannels);
     
-private:
-    float phasor;
-    float freq;
-    float timestamp;
-    float initPhase;
-    float phasorMod;
+    void onGuiButtonEvent(ofxDatGuiButtonEvent e);
     
-    int quantization;
-    float holdTime; //The duration of the hold in percentage (0.5) --> 50% of the cycle is the phase in initPhase
+private:
+    ofParameter<float> phasor;
+    ofParameter<float> phasorMod;
+    ofParameter<float> freq_Param;
+    ofParameter<float> initPhase_Param;
+    ofParameter<int> quant_Param;
+    bool                loop_Param;
+    
+    ofxDatGui* gui;
+    
     
     ofSoundStream soundStream;
 };
