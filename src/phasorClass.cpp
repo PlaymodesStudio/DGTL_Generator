@@ -48,7 +48,7 @@ void phasorClass::audioIn(float * input, int bufferSize, int nChannels){
     //Hold to freq
     //No control over phase holding
     phasorMod *= (1.0f/(1.0f-holdTime));
-    if(phasorMod <= 1)
+    if(phasorMod >= 1)
         phasorMod = 0;
     
     
