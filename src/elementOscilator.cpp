@@ -12,7 +12,8 @@ elementOscilator::elementOscilator(){
     freq_Param = PI;
     indexCount_Param = 144;
     pow_Param = 1;
-    invert_Param = 1;
+    invert_Param = false;
+    modulation = triOsc;
     
     generatorGui = new ofxDatGui();
 }
@@ -21,33 +22,92 @@ void elementOscilator::setup(){
     generatorGui->addHeader();
     generatorGui->addLabel("Index Modify Parameters");
     generatorGui->setPosition(ofxDatGuiAnchor::TOP_RIGHT);
-    generatorGui->addSlider(freq_Param.set("Horizontal displacement", 1, 0, indexCount_Param));
-    generatorGui->addToggle("Invert");
+    generatorGui->addSlider(freq_Param.set("n Waves", 1, 0, indexCount_Param));
+    generatorGui->addSlider(phaseOffset_Param.set("Phase offset", 0, 0, 1));
+    generatorGui->addToggle("Invert")->setEnabled(false);
     generatorGui->addSlider(pow_Param.set("Pow", 1, -40, 40));
+    generatorGui->addSlider(pwm_Param.set("Square PWM", 0.5, 0, 1));
+    generatorGui->addDropdown("Wave Select", {"sin", "cos", "tri", "square", "saw", "inverted saw", "rand1", "rand2"});
     
     generatorGui->onButtonEvent(this, &elementOscilator::onGuiButtonEvent);
+    generatorGui->onDropdownEvent(this, &elementOscilator::onGuiDropdownEvent);
 }
 
 float elementOscilator::computeFunc(float phasor, int index){
     //get phasor to be w (radial freq)
-    float w = phasor*2*PI;
+    float w = (phasor*2*PI) + (phaseOffset_Param*2*PI);
     
+    
+    
+    float k = 0;;
     //we first get the displacement between 0 and 1 depending of the index
-    float k = ((float)index/(float)indexCount_Param) * 2 * PI;
+    if(!invert_Param)
+        k = (((float)indexCount_Param-(float)index)/(float)indexCount_Param) * 2 * PI;
+    else
+        k = ((float)index/(float)indexCount_Param) * 2 * PI;
     
     //invert it?
-    k *= invert_Param;
-    
+    //k *= invert_Param;
     k *=  freq_Param; //Index Modifiers
-    float val = sin(w+k);
+    
+    
+    float linPhase = fmod(w+k, 2*PI) / (2*PI);
+    float val = 0;
+    switch (modulation) {
+        case sinOsc:
+        {
+            val = sin(w+k);
+            val = ofMap(val, -1, 1, 0, 1);
+            break;
+        
+        }
+        case cosOsc:
+        {
+            val = cos(w+k);
+            val = ofMap(val, -1, 1, 0, 1);
+            break;
+        }
+        case triOsc:
+        {
+            val = 1-(fabs((linPhase * (-2)) + 1));
+            break;
+        }
+        case squareOsc:
+        {
+            val = (linPhase > pwm_Param) ? 1 : 0;
+            break;
+        }
+        case sawOsc:
+        {
+            val = linPhase;
+            break;
+        }
+        case sawInvOsc:
+        {
+            val = 1-linPhase;
+            break;
+        }
+        case rand1Osc:
+        {
+            val = ofNoise(ofGetElapsedTimef()*2+((float)index/(float)indexCount_Param)*freq_Param);
+            val = ofMap(val, 0.25, 0.75, 0, 1, true);
+            break;
+        }
+        case rand2Osc:
+        {
+            val = ofNoise(phasor+index);
+            break;
+        }
+        default:
+            break;
+    }
+    
 
     computeMultiplyMod(&val);
     return val;
 }
 
 void elementOscilator::computeMultiplyMod(float *value){
-    //Values between 0 and 1
-    *value = ofMap(*value, -1, 1, 0, 1);
     
     //pow
     if(pow_Param)
@@ -57,6 +117,16 @@ void elementOscilator::computeMultiplyMod(float *value){
 
 void elementOscilator::onGuiButtonEvent(ofxDatGuiButtonEvent e){
     if(e.target->getName() == "Invert")
-        invert_Param = e.enabled ? -1 : 1;
+        invert_Param = e.enabled;
 }
+
+void elementOscilator::onGuiDropdownEvent(ofxDatGuiDropdownEvent e){
+    if(e.target->getName() == "Wave Select")
+        modulation = static_cast<oscTypes>(e.child+1);
+}
+
+
+
+
+
 
