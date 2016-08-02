@@ -48,6 +48,9 @@ private:
     ofParameter<int>    symmetry_Param;
     ofParameter<float>  holdTime_Param; //The duration of the hold in percentage (0.5) --> 50% of the cycle is the phase in initPhase
     ofParameter<float>  phaseOffset_Param;
+    ofParameter<int>    indexOffset_Param;
+    ofParameter<int>    indexQuant_Param;
+    ofParameter<float>  quant_Param;
     
     oscTypes modulation;
     

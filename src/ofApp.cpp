@@ -6,6 +6,8 @@ void ofApp::setup(){
     ofSetFrameRate(30);
     
     pixelNum = PIXEL_X_BAR;
+    singleGenerator.setup();
+    singleGenerator.setIndexCount(pixelNum);
     
     infoVec.reserve(pixelNum);
     
@@ -26,7 +28,7 @@ void ofApp::setup(){
 //    gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
 //    gui->onButtonEvent(this, &ofApp::onGuiButtonEvent);
     
-    singleGenerator.setup();
+    
 }
 
 //--------------------------------------------------------------
@@ -34,6 +36,7 @@ void ofApp::update(){
     for (int i = 0; i < pixelNum ; i++){
         infoVec[i] = singleGenerator.computeFunc(phasor.getPhasor(), i);
     }
+    cout<<endl;
     
     pixelContent.begin();
     for (int i = 0; i < pixelContent.getWidth() ; i++){

@@ -27,6 +27,11 @@ void elementOscilator::setup(){
     generatorGui->addSlider(phaseOffset_Param.set("Phase offset", 0, 0, 1));
     generatorGui->addToggle("Invert")->setEnabled(false);
     generatorGui->addSlider(symmetry_Param.set("Symmetry", 0, 0, 10));
+    generatorGui->addSlider(indexOffset_Param.set("Index Offset", 0, -indexCount_Param, indexCount_Param));
+    generatorGui->addSlider(indexQuant_Param.set("Index Quantization", 1, 1, indexCount_Param));
+    generatorGui->addBreak();
+    generatorGui->addLabel("Multipliers");
+    generatorGui->addSlider(quant_Param.set("Quantization", 0, 0, 1));
     generatorGui->addSlider(pow_Param.set("Pow", 1, -40, 40));
     generatorGui->addSlider(pwm_Param.set("Square PWM", 0.5, 0, 1));
     generatorGui->addDropdown("Wave Select", {"sin", "cos", "tri", "square", "saw", "inverted saw", "rand1", "rand2"});
@@ -37,39 +42,21 @@ void elementOscilator::setup(){
 
 float elementOscilator::computeFunc(float phasor, int index){
     //get phasor to be w (radial freq)
-    float w = (phasor*2*PI) + (phaseOffset_Param*2*PI);
+    float w = (phasor*2*PI);// + (phaseOffset_Param*2*PI);
     
-    
-    //SYMETRY TESTS
-    //if(symmetry_Param)
-    //    index = indexCount_Param-(fabs((index * (-2)) + indexCount_Param));
-    
-    //SYMMETRY 2 beaqutiful but now symetry
-    //for (int i=0 ; i<symmetry_Param+1; i++){
-     //   if(index > (indexCount_Param*i) / ((symmetry_Param+1)) && index < (indexCount_Param*(i+1)) / ((symmetry_Param+1)))
-     //       index = (i%2) ? index : indexCount_Param-index;
-    //}
-    
-    //SYMMETRY 3
-//    for (int i=0 ; i<symmetry_Param+1; i++){
-//        if(index > (indexCount_Param*i) / ((symmetry_Param+1)) && index < (indexCount_Param*(i+1)) / ((symmetry_Param+1)))
-//            index = (i%2) ? index%(indexCount_Param/(symmetry_Param+1)) : (indexCount_Param/(symmetry_Param+1))-index%(indexCount_Param/(symmetry_Param+1));
-//    }
-    
-    
-    //symmetry 4
-//    int i = (int)index/indexCount_Param/(symmetry_Param+1);
-//    i++;
-//    index = (i%2) ? index%(indexCount_Param/(symmetry_Param+1)) : (indexCount_Param/(symmetry_Param+1))-index%(indexCount_Param/(symmetry_Param+1));
-    
-    
-    //symmetry santi
-    //index = abs((index%symmetry_Param+1)-((index/symmetry_Param)%2)*symmetry_Param);
-    
-    
-    //symetry santi2
+    bool odd = false;
+    if((int)((index)/(indexCount_Param/(symmetry_Param+1)))%2 == 1 ) odd = true;
+
+    //SYMMETRY santi
     int veusSym = indexCount_Param/(symmetry_Param+1);
     index = veusSym-abs((((int)(index/veusSym)%2) * veusSym)-(index%veusSym));
+    
+    index = odd ? index-indexOffset_Param : index+indexOffset_Param;
+    
+//    index += indexOffset_Param;
+//    index %= indexCount_Param;
+    
+    
     
     //INVERSE
     //Fisrt we invert the index to simulate the wave goes from left to right, inverting indexes, if we want to invertit we don't do this calc
@@ -77,7 +64,13 @@ float elementOscilator::computeFunc(float phasor, int index){
         index = ((float)indexCount_Param-(float)index);
     
     
-    float k = ((float)index/(float)indexCount_Param) * 2 * PI;
+    //QUANTIZE
+    index = ceil(index/indexQuant_Param);
+    
+    cout<<index<<"-" ;
+    
+    
+    float k = (((float)index/(float)indexCount_Param) + phaseOffset_Param) * 2 * PI;
     
     
     
@@ -114,12 +107,12 @@ float elementOscilator::computeFunc(float phasor, int index){
         }
         case sawOsc:
         {
-            val = linPhase;
+            val = 1-linPhase;
             break;
         }
         case sawInvOsc:
         {
-            val = 1-linPhase;
+            val = linPhase;
             break;
         }
         case rand1Osc:
@@ -143,10 +136,16 @@ float elementOscilator::computeFunc(float phasor, int index){
 }
 
 void elementOscilator::computeMultiplyMod(float *value){
+  
     
     //pow
     if(pow_Param)
         *value = (pow_Param < 0) ? pow(*value, 1/(float)(-pow_Param)) : pow(*value, pow_Param);
+    
+    //Quantization
+    if(quant_Param)
+        *value = quant_Param*floor(*value/quant_Param + 0.5);
+    
 }
 
 
