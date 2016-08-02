@@ -3,30 +3,31 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofBackground(0);
-    ofSetFrameRate(30);
+    ofSetFrameRate(40);
     
     pixelNum = PIXEL_X_BAR;
     singleGenerator.setup();
     singleGenerator.setIndexCount(pixelNum);
+    delayControler.setup();
+    delayControler.setIndexCount(NUM_BARS);
     
-    infoVec.reserve(pixelNum);
+//    infoVec.reserve(pixelNum);
+    infoVec.resize(pixelNum, 0);
     
     syphonServer.setName("DGTL_Gen");
     
     pixelContent.allocate(PIXEL_X_BAR, NUM_BARS, GL_RGB);
+    pixelContent.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
     phasor.setup();
     
-//    gui = new ofxDatGui();
-//    gui->addHeader();
-//    gui->addLabel("Main Config");
-//    gui->addSlider(freq.set("Frequency", 1, 0, 10));
-//    gui->addBreak();
-//    gui->addLabel("Phasor Parameters");
-//    gui->addSlider("pixelNum", 1, PIXEL_X_BAR, 144)->setPrecision(0);
-//    gui->addSlider("Initial Phase", 0, 1, 0)->setPrecision(2);
-//    gui->addButton("Reset Phase");
-//    gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
-//    gui->onButtonEvent(this, &ofApp::onGuiButtonEvent);
+    gui = new ofxDatGui();
+    gui->addHeader();
+    gui->setPosition(0, 200);
+    gui->addLabel("Main Config");
+    gui->addSlider("pixelNum", 1, PIXEL_X_BAR, 432)->setPrecision(0);
+    gui->addSlider(delay_frames.set("Delay", 1, 0, 30));
+    gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
+    gui->onButtonEvent(this, &ofApp::onGuiButtonEvent);
     
     
 }
@@ -36,14 +37,30 @@ void ofApp::update(){
     for (int i = 0; i < pixelNum ; i++){
         infoVec[i] = singleGenerator.computeFunc(phasor.getPhasor(), i);
     }
-    cout<<endl;
+    pair<int, vector<float>> tempPair;
+    tempPair.first = ofGetFrameNum();
+    tempPair.second = infoVec;
+    infoVec_Buffer.push_back(tempPair);
+    
+    cout<<infoVec_Buffer.size()<<endl;
     
     pixelContent.begin();
-    for (int i = 0; i < pixelContent.getWidth() ; i++){
-        ofSetColor(infoVec[i]*255);
+    
+        //ofSetColor(infoVec[i]*255);
         for(int j = 0 ; j < pixelContent.getHeight() ; j++){
-            ofDrawRectangle(i, j, 1, 1);
-        }
+            for(auto &tempInfoVec : infoVec_Buffer){
+                if(tempInfoVec.first == ofGetFrameNum() - (delay_frames*(delayControler.computeFunc(j)))){
+                    for (int i = 0; i < pixelContent.getWidth() ; i++){
+                    if(tempInfoVec.second.size()) ofSetColor(tempInfoVec.second[i] * 255);
+                    if(j == pixelContent.getHeight()-1 && i == pixelContent.getWidth()-1)
+                        infoVec_Buffer.pop_front();
+                    ofDrawRectangle(i, j, 1, 1);
+                    }
+                }
+            }
+            
+            
+        
     }
     
     pixelContent.end();
@@ -53,8 +70,6 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofSetColor(255);
-    
-    
     
     pixelContent.draw(0,0, ofGetWidth(), 5*ofGetHeight()/11);
     

@@ -51,6 +51,10 @@ private:
     ofParameter<int>    indexOffset_Param;
     ofParameter<int>    indexQuant_Param;
     ofParameter<float>  quant_Param;
+    ofParameter<float>  scale_Param;
+    ofParameter<float>  offset_Param;
+    ofParameter<float>  comb_Param;
+    ofParameter<int>    modulo_Param;
     
     oscTypes modulation;
     

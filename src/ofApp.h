@@ -5,9 +5,10 @@
 #include "ofxDatGui.h"
 #include "ofxSyphon.h"
 #include "elementOscilator.h"
+#include "delayControl.h"
 
-static const int NUM_BARS = 12;
-static const int PIXEL_X_BAR = 144;
+static const int NUM_BARS = 11;
+static const int PIXEL_X_BAR = 432;
 
 class ofApp : public ofBaseApp{
 
@@ -38,6 +39,8 @@ class ofApp : public ofBaseApp{
     
     int count;
     vector<float> infoVec;
+    deque<pair<int,vector<float>>> infoVec_Buffer;
+    ofParameter<int> delay_frames;
     ofFbo pixelContent;
     phasorClass phasor;
     
@@ -50,6 +53,7 @@ class ofApp : public ofBaseApp{
     
     
     elementOscilator singleGenerator;
+    delayControl        delayControler;
     
 		
 };

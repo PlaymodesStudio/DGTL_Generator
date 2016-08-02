@@ -10,7 +10,7 @@
 
 elementOscilator::elementOscilator(){
     freq_Param = PI;
-    indexCount_Param = 144;
+    indexCount_Param = 432;
     pow_Param = 1;
     invert_Param = false;
     symmetry_Param = 0;
@@ -29,6 +29,8 @@ void elementOscilator::setup(){
     generatorGui->addSlider(symmetry_Param.set("Symmetry", 0, 0, 10));
     generatorGui->addSlider(indexOffset_Param.set("Index Offset", 0, -indexCount_Param, indexCount_Param));
     generatorGui->addSlider(indexQuant_Param.set("Index Quantization", 1, 1, indexCount_Param));
+    generatorGui->addSlider(comb_Param.set("Combination", 0, 0, 1));
+    generatorGui->addSlider(modulo_Param.set("Modulo", 1, 1, indexCount_Param));
     generatorGui->addBreak();
     generatorGui->addLabel("Multipliers");
     generatorGui->addSlider(quant_Param.set("Quantization", 0, 0, 1));
@@ -67,7 +69,13 @@ float elementOscilator::computeFunc(float phasor, int index){
     //QUANTIZE
     index = ceil(index/indexQuant_Param);
     
-    cout<<index<<"-" ;
+    //cout<<index<<"-" ;
+    
+    //COMB
+    index = abs(((index%2)*indexCount_Param*comb_Param)-index);
+    
+    //modeulsafidosia
+    index %= modulo_Param;
     
     
     float k = (((float)index/(float)indexCount_Param) + phaseOffset_Param) * 2 * PI;
@@ -144,7 +152,7 @@ void elementOscilator::computeMultiplyMod(float *value){
     
     //Quantization
     if(quant_Param)
-        *value = quant_Param*floor(*value/quant_Param + 0.5);
+        *value = quant_Param*floor(*value/quant_Param);
     
 }
 
