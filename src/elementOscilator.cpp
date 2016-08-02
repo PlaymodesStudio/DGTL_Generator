@@ -26,7 +26,7 @@ void elementOscilator::setup(){
     generatorGui->addSlider(freq_Param.set("n Waves", 1, 0, indexCount_Param));
     generatorGui->addSlider(phaseOffset_Param.set("Phase offset", 0, 0, 1));
     generatorGui->addToggle("Invert")->setEnabled(false);
-    generatorGui->addSlider(symmetry_Param.set("Symmetry", 1, 0, 100));
+    generatorGui->addSlider(symmetry_Param.set("Symmetry", 0, 0, 10));
     generatorGui->addSlider(pow_Param.set("Pow", 1, -40, 40));
     generatorGui->addSlider(pwm_Param.set("Square PWM", 0.5, 0, 1));
     generatorGui->addDropdown("Wave Select", {"sin", "cos", "tri", "square", "saw", "inverted saw", "rand1", "rand2"});
@@ -68,7 +68,7 @@ float elementOscilator::computeFunc(float phasor, int index){
     
     
     //symetry santi2
-    int veusSym = indexCount_Param/symmetry_Param;
+    int veusSym = indexCount_Param/(symmetry_Param+1);
     index = veusSym-abs((((int)(index/veusSym)%2) * veusSym)-(index%veusSym));
     
     //INVERSE
