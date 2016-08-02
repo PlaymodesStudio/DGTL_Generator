@@ -13,7 +13,7 @@ elementOscilator::elementOscilator(){
     indexCount_Param = 144;
     pow_Param = 1;
     invert_Param = false;
-    symmetry_Param = false;
+    symmetry_Param = 0;
     modulation = triOsc;
     
     generatorGui = new ofxDatGui();
@@ -26,7 +26,7 @@ void elementOscilator::setup(){
     generatorGui->addSlider(freq_Param.set("n Waves", 1, 0, indexCount_Param));
     generatorGui->addSlider(phaseOffset_Param.set("Phase offset", 0, 0, 1));
     generatorGui->addToggle("Invert")->setEnabled(false);
-    generatorGui->addToggle("Symmetry")->setEnabled(false);
+    generatorGui->addSlider(symmetry_Param.set("Symmetry", 1, 0, 100));
     generatorGui->addSlider(pow_Param.set("Pow", 1, -40, 40));
     generatorGui->addSlider(pwm_Param.set("Square PWM", 0.5, 0, 1));
     generatorGui->addDropdown("Wave Select", {"sin", "cos", "tri", "square", "saw", "inverted saw", "rand1", "rand2"});
@@ -40,15 +40,41 @@ float elementOscilator::computeFunc(float phasor, int index){
     float w = (phasor*2*PI) + (phaseOffset_Param*2*PI);
     
     
+    //SYMETRY TESTS
+    //if(symmetry_Param)
+    //    index = indexCount_Param-(fabs((index * (-2)) + indexCount_Param));
+    
+    //SYMMETRY 2 beaqutiful but now symetry
+    //for (int i=0 ; i<symmetry_Param+1; i++){
+     //   if(index > (indexCount_Param*i) / ((symmetry_Param+1)) && index < (indexCount_Param*(i+1)) / ((symmetry_Param+1)))
+     //       index = (i%2) ? index : indexCount_Param-index;
+    //}
+    
+    //SYMMETRY 3
+//    for (int i=0 ; i<symmetry_Param+1; i++){
+//        if(index > (indexCount_Param*i) / ((symmetry_Param+1)) && index < (indexCount_Param*(i+1)) / ((symmetry_Param+1)))
+//            index = (i%2) ? index%(indexCount_Param/(symmetry_Param+1)) : (indexCount_Param/(symmetry_Param+1))-index%(indexCount_Param/(symmetry_Param+1));
+//    }
+    
+    
+    //symmetry 4
+//    int i = (int)index/indexCount_Param/(symmetry_Param+1);
+//    i++;
+//    index = (i%2) ? index%(indexCount_Param/(symmetry_Param+1)) : (indexCount_Param/(symmetry_Param+1))-index%(indexCount_Param/(symmetry_Param+1));
+    
+    
+    //symmetry santi
+    //index = abs((index%symmetry_Param+1)-((index/symmetry_Param)%2)*symmetry_Param);
+    
+    
+    //symetry santi2
+    int veusSym = indexCount_Param/symmetry_Param;
+    index = veusSym-abs((((int)(index/veusSym)%2) * veusSym)-(index%veusSym));
+    
     //INVERSE
     //Fisrt we invert the index to simulate the wave goes from left to right, inverting indexes, if we want to invertit we don't do this calc
     if(!invert_Param)
         index = ((float)indexCount_Param-(float)index);
-    
-    //SYMETRY
-    if(symmetry_Param)
-        index = indexCount_Param-(fabs((index * (-2)) + indexCount_Param));
-    
     
     
     float k = ((float)index/(float)indexCount_Param) * 2 * PI;
@@ -127,8 +153,6 @@ void elementOscilator::computeMultiplyMod(float *value){
 void elementOscilator::onGuiButtonEvent(ofxDatGuiButtonEvent e){
     if(e.target->getName() == "Invert")
         invert_Param = e.enabled;
-    if(e.target->getName() == "Symmetry")
-        symmetry_Param = e.enabled;
 }
 
 void elementOscilator::onGuiDropdownEvent(ofxDatGuiDropdownEvent e){

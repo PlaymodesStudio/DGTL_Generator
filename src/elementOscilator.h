@@ -44,7 +44,8 @@ private:
     ofParameter<int>    pow_Param; //Pow of the funcion, working on sin, cos....
     ofParameter<int>    indexCount_Param; //The max number you will get from index
     ofParameter<float>  pwm_Param;
-    bool                 invert_Param, symmetry_Param;
+    bool                 invert_Param;
+    ofParameter<int>    symmetry_Param;
     ofParameter<float>  holdTime_Param; //The duration of the hold in percentage (0.5) --> 50% of the cycle is the phase in initPhase
     ofParameter<float>  phaseOffset_Param;
     
