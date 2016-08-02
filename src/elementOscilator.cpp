@@ -13,6 +13,7 @@ elementOscilator::elementOscilator(){
     indexCount_Param = 144;
     pow_Param = 1;
     invert_Param = false;
+    symmetry_Param = false;
     modulation = triOsc;
     
     generatorGui = new ofxDatGui();
@@ -25,6 +26,7 @@ void elementOscilator::setup(){
     generatorGui->addSlider(freq_Param.set("n Waves", 1, 0, indexCount_Param));
     generatorGui->addSlider(phaseOffset_Param.set("Phase offset", 0, 0, 1));
     generatorGui->addToggle("Invert")->setEnabled(false);
+    generatorGui->addToggle("Symmetry")->setEnabled(false);
     generatorGui->addSlider(pow_Param.set("Pow", 1, -40, 40));
     generatorGui->addSlider(pwm_Param.set("Square PWM", 0.5, 0, 1));
     generatorGui->addDropdown("Wave Select", {"sin", "cos", "tri", "square", "saw", "inverted saw", "rand1", "rand2"});
@@ -38,13 +40,20 @@ float elementOscilator::computeFunc(float phasor, int index){
     float w = (phasor*2*PI) + (phaseOffset_Param*2*PI);
     
     
-    
-    float k = 0;;
-    //we first get the displacement between 0 and 1 depending of the index
+    //INVERSE
+    //Fisrt we invert the index to simulate the wave goes from left to right, inverting indexes, if we want to invertit we don't do this calc
     if(!invert_Param)
-        k = (((float)indexCount_Param-(float)index)/(float)indexCount_Param) * 2 * PI;
-    else
-        k = ((float)index/(float)indexCount_Param) * 2 * PI;
+        index = ((float)indexCount_Param-(float)index);
+    
+    //SYMETRY
+    if(symmetry_Param)
+        index = indexCount_Param-(fabs((index * (-2)) + indexCount_Param));
+    
+    
+    
+    float k = ((float)index/(float)indexCount_Param) * 2 * PI;
+    
+    
     
     //invert it?
     //k *= invert_Param;
@@ -118,6 +127,8 @@ void elementOscilator::computeMultiplyMod(float *value){
 void elementOscilator::onGuiButtonEvent(ofxDatGuiButtonEvent e){
     if(e.target->getName() == "Invert")
         invert_Param = e.enabled;
+    if(e.target->getName() == "Symmetry")
+        symmetry_Param = e.enabled;
 }
 
 void elementOscilator::onGuiDropdownEvent(ofxDatGuiDropdownEvent e){
