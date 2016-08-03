@@ -33,7 +33,10 @@ void elementOscilator::setup(){
     generatorGui->addSlider(modulo_Param.set("Modulo", 1, 1, indexCount_Param));
     generatorGui->addBreak();
     generatorGui->addLabel("Multipliers");
+    generatorGui->addSlider(randomAdd_Param.set("Random addition", 0, -1, 1));
     generatorGui->addSlider(quant_Param.set("Quantization", 0, 0, 1));
+    generatorGui->addSlider(scale_Param.set("Scale", 1, 0, 2));
+    generatorGui->addSlider(offset_Param.set("Offset", 0, -1, 1));
     generatorGui->addSlider(pow_Param.set("Pow", 1, -40, 40));
     generatorGui->addSlider(pwm_Param.set("Square PWM", 0.5, 0, 1));
     generatorGui->addDropdown("Wave Select", {"sin", "cos", "tri", "square", "saw", "inverted saw", "rand1", "rand2"});
@@ -145,6 +148,17 @@ float elementOscilator::computeFunc(float phasor, int index){
 
 void elementOscilator::computeMultiplyMod(float *value){
   
+    //SCALE
+    *value *= scale_Param;
+    
+    //OFFSETç
+    *value += offset_Param;
+    
+    //random Add
+    if(randomAdd_Param)
+        *value += randomAdd_Param*ofRandom(1);
+    
+    *value = ofClamp(*value, 0, 1);
     
     //pow
     if(pow_Param)

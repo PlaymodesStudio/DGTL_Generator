@@ -55,6 +55,7 @@ private:
     ofParameter<float>  offset_Param;
     ofParameter<float>  comb_Param;
     ofParameter<int>    modulo_Param;
+    ofParameter<float>  randomAdd_Param;
     
     oscTypes modulation;
     
