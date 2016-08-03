@@ -15,6 +15,7 @@ void delayControl::setup(){
     generatorGui->setPosition(300, 300);
     generatorGui->addLabel("Delay Modify Parameters");
     generatorGui->setPosition(ofxDatGuiAnchor::TOP_RIGHT);
+    generatorGui->addSlider(delay_frames.set("Delay", 1, 0, 40))->setPrecision(0);
     generatorGui->addToggle("Invert")->setChecked(false);
     generatorGui->addSlider(symmetry_Param.set("Symmetry", 0, 0, 10));
     //generatorGui->addSlider(indexOffset_Param.set("Index Offset", 0, -indexCount_Param, indexCount_Param));
@@ -74,6 +75,29 @@ int delayControl::computeFunc(int index){
     
     return index;
 
+}
+
+
+void delayControl::applyDelayToTexture(ofFbo &fbo, vector<float> infoVec){
+    
+    infoVecBuffer.push_back(infoVec);
+    
+    fbo.begin();
+    
+    ofSetColor(0);
+    for(int j = 0 ; j < fbo.getHeight() ; j++){
+        int delayIndex = delay_frames*(computeFunc(j));
+        while(infoVecBuffer.size() <= delayIndex) delayIndex--;
+        for (int i = 0; i < fbo.getWidth() ; i++){
+            ofSetColor(infoVecBuffer[delayIndex][i] * 255);
+            ofDrawRectangle(i, j, 1, 1);
+        }
+    }
+    
+    while(infoVecBuffer.size() > delay_frames*fbo.getHeight())
+        infoVecBuffer.pop_front();
+    
+    fbo.end();
 }
 
 

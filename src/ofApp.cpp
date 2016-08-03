@@ -3,23 +3,36 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofBackground(0);
+    
+    //Set the FrameRate to be 40, that is the frame rate of the Pixel Bars
     ofSetFrameRate(40);
     
+    //Initialize our pixelNum var to have all the pixels in one bar
     pixelNum = PIXEL_X_BAR;
+    
+    //Setup the generator of waves and pass it the numbers of items it will have
     singleGenerator.setup();
     singleGenerator.setIndexCount(pixelNum);
+    
+    //Initialize the calculator of index modifications in delaying the info calulated by the singleGenerator
     delayControler.setup();
     delayControler.setIndexCount(NUM_BARS);
     
-//    infoVec.reserve(pixelNum);
+    //Initialize our vector that stores the information of the oscilators
     infoVec.resize(pixelNum, 0);
     
-    syphonServer.setName("DGTL_Gen");
+    //Initlize our syphon and specify the name
+    syphonServer.setName("DGTL Generator");
     
+    //Allocation of the texture, and modify to show correctly the discrete pixels
     pixelContent.allocate(PIXEL_X_BAR, NUM_BARS, GL_RGB);
     pixelContent.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+    
+    //Setup of the phasor, wich controls the oscilator generator
     phasor.setup();
     
+    //Gui creation
+    //DAT GUI
 //    gui = new ofxDatGui();
 //    gui->addHeader();
 //    gui->setPosition(0, 200);
@@ -28,6 +41,7 @@ void ofApp::setup(){
 //    gui->addSlider(delay_frames.set("Delay", 1, 0, 30));
 //    gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
     
+    //ofxGui
     gui.setup("Main Gui");
     gui.setPosition(0, 200);
     gui.add(delay_frames.set("Delay", 1, 0, 30));
@@ -39,28 +53,11 @@ void ofApp::update(){
 
     singleGenerator.computeFunc(infoVec.data(), phasor.getPhasor());
     
-    infoVec_Buffer.push_back(infoVec);
     
-    //cout<<infoVec_Buffer.size()<<endl;
-    //cout<<endl;
     
-    pixelContent.begin();
+    delayControler.applyDelayToTexture(pixelContent, infoVec);
     
-    ofSetColor(0);
-    //ofSetColor(infoVec[i]*255);
-    for(int j = 0 ; j < pixelContent.getHeight() ; j++){
-        int delayIndex = delay_frames*(delayControler.computeFunc(j));
-        while( infoVec_Buffer.size() <= delayIndex) delayIndex--;
-        for (int i = 0; i < pixelContent.getWidth() ; i++){
-            ofSetColor(infoVec_Buffer[delayIndex][i] * 255);
-            ofDrawRectangle(i, j, 1, 1);
-        }
-    }
-    
-    while(infoVec_Buffer.size() > delay_frames*NUM_BARS)
-        infoVec_Buffer.pop_front();
-    
-    pixelContent.end();
+
     syphonServer.publishTexture(&pixelContent.getTexture());
 }
 

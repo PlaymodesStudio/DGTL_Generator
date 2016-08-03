@@ -19,6 +19,7 @@ public:
     
     void setup();
     int computeFunc(int index);
+    void applyDelayToTexture(ofFbo &fbo, vector<float> infoVec);
     
     void onGuiToggleEvent(ofxDatGuiToggleEvent e);
     void setIndexCount(int indexCount){indexCount_Param = indexCount;};
@@ -36,6 +37,10 @@ private:
     ofParameter<int>    indexOffset_Param;
     ofParameter<int>    indexQuant_Param;
     ofParameter<float>  comb_Param;
+    ofParameter<float>   delay_frames;
+    
+    
+    deque<vector<float>> infoVecBuffer;
 };
 
 #endif /* delayControl_h */
