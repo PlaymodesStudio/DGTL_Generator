@@ -27,7 +27,6 @@ void ofApp::setup(){
 //    gui->addSlider("pixelNum", 1, PIXEL_X_BAR, 432)->setPrecision(0);
 //    gui->addSlider(delay_frames.set("Delay", 1, 0, 30));
 //    gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
-//    gui->onButtonEvent(this, &ofApp::onGuiButtonEvent);
     
     gui.setup("Main Gui");
     gui.setPosition(0, 200);
@@ -166,9 +165,4 @@ void ofApp::onGuiSliderEvent(ofxDatGuiSliderEvent e){
 //        pixelContent.allocate(pixelNum, NUM_BARS);
         
     }
-}
-
-void ofApp::onGuiButtonEvent(ofxDatGuiButtonEvent e){
-//    if(e.target->getName() == "Reset Phase")
-//        phasor.resetPhasor(gui->getSlider("Initial Phase")->getValue());
 }

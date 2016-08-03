@@ -32,7 +32,6 @@ class ofApp : public ofBaseApp{
     
     
     void onGuiSliderEvent(ofxDatGuiSliderEvent e);
-    void onGuiToggleEvent(ofxDatGuiToggleEvent e);
     
     
     int pixelNum;
