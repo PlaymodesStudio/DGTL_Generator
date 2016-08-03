@@ -33,10 +33,9 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    for (int i = 0; i < pixelNum ; i++){
-        infoVec[i] = singleGenerator.computeFunc(phasor.getPhasor(), i);
-        //cout<< i << endl;
-    }
+
+    singleGenerator.computeFunc(infoVec.data(), phasor.getPhasor());
+    
     infoVec_Buffer.push_back(infoVec);
     
     //cout<<infoVec_Buffer.size()<<endl;
@@ -150,7 +149,7 @@ void ofApp::onGuiSliderEvent(ofxDatGuiSliderEvent e){
         
         //Change vector storing values size
         infoVec.clear();
-        infoVec.reserve(pixelNum);
+        infoVec.resize(pixelNum);
         
         //Change horizontal slider max, and crop it if it get out of boundaries
         auto sli = gui->getSlider("Horizontal Frequency");
