@@ -25,7 +25,7 @@ void elementOscilator::setup(){
     generatorGui->setPosition(ofxDatGuiAnchor::TOP_RIGHT);
     generatorGui->addSlider(freq_Param.set("n Waves", 1, 0, indexCount_Param));
     generatorGui->addSlider(phaseOffset_Param.set("Phase offset", 0, 0, 1));
-    generatorGui->addToggle("Invert")->setEnabled(false);
+    generatorGui->addToggle("Invert")->setChecked(false);
     generatorGui->addSlider(symmetry_Param.set("Symmetry", 0, 0, 10));
     generatorGui->addSlider(indexOffset_Param.set("Index Offset", 0, -indexCount_Param, indexCount_Param));
     generatorGui->addSlider(indexQuant_Param.set("Index Quantization", 1, 1, indexCount_Param));
@@ -41,7 +41,7 @@ void elementOscilator::setup(){
     generatorGui->addSlider(pwm_Param.set("Square PWM", 0.5, 0, 1));
     generatorGui->addDropdown("Wave Select", {"sin", "cos", "tri", "square", "saw", "inverted saw", "rand1", "rand2"});
     
-    generatorGui->onButtonEvent(this, &elementOscilator::onGuiButtonEvent);
+    generatorGui->onToggleEvent(this, &elementOscilator::onGuiToggleEvent);
     generatorGui->onDropdownEvent(this, &elementOscilator::onGuiDropdownEvent);
 }
 
@@ -171,9 +171,9 @@ void elementOscilator::computeMultiplyMod(float *value){
 }
 
 
-void elementOscilator::onGuiButtonEvent(ofxDatGuiButtonEvent e){
+void elementOscilator::onGuiToggleEvent(ofxDatGuiToggleEvent e){
     if(e.target->getName() == "Invert")
-        invert_Param = e.enabled;
+        invert_Param = e.target->getChecked();
 }
 
 void elementOscilator::onGuiDropdownEvent(ofxDatGuiDropdownEvent e){

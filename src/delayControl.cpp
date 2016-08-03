@@ -15,7 +15,7 @@ void delayControl::setup(){
     generatorGui->setPosition(300, 300);
     generatorGui->addLabel("Delay Modify Parameters");
     generatorGui->setPosition(ofxDatGuiAnchor::TOP_RIGHT);
-    generatorGui->addToggle("Invert")->setEnabled(false);
+    generatorGui->addToggle("Invert")->setChecked(false);
     generatorGui->addSlider(symmetry_Param.set("Symmetry", 0, 0, 10));
     //generatorGui->addSlider(indexOffset_Param.set("Index Offset", 0, -indexCount_Param, indexCount_Param));
     generatorGui->addSlider(indexQuant_Param.set("Index Quantization", 1, 1, indexCount_Param));
@@ -25,7 +25,7 @@ void delayControl::setup(){
     //generatorGui->addSlider(pow_Param.set("Pow", 1, -40, 40));
     //generatorGui->addDropdown("Wave Select", {"sin", "cos", "tri", "square", "saw", "inverted saw", "rand1", "rand2"});
     
-    generatorGui->onButtonEvent(this, &delayControl::onGuiButtonEvent);
+    generatorGui->onToggleEvent(this, &delayControl::onGuiToggleEvent);
 }
 
 
@@ -77,7 +77,7 @@ int delayControl::computeFunc(int index){
 }
 
 
-void delayControl::onGuiButtonEvent(ofxDatGuiButtonEvent e){
+void delayControl::onGuiToggleEvent(ofxDatGuiToggleEvent e){
     if(e.target->getName() == "Invert")
-        invert_Param = e.enabled;
+        invert_Param = e.target->getChecked();
 }

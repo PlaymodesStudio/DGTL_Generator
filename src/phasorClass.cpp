@@ -29,6 +29,7 @@ void phasorClass::setup(){
     gui->addButton("Reset Phase");
     gui->addToggle("Loop")->setEnabled(true);
     gui->onButtonEvent(this, &phasorClass::onGuiButtonEvent);
+    gui->onToggleEvent(this, &phasorClass::onGuiToggleEvent);
     gui->onSliderEvent(this, &phasorClass::onGuiSliderEvent);
 }
 
@@ -71,9 +72,11 @@ void phasorClass::audioIn(float * input, int bufferSize, int nChannels){
 void phasorClass::onGuiButtonEvent(ofxDatGuiButtonEvent e){
     if(e.target->getName() == "Reset Phase")
         resetPhasor(initPhase_Param);
-    
+
+}
+void phasorClass::onGuiToggleEvent(ofxDatGuiToggleEvent e){
     if(e.target->getName() == "Loop")
-        loop_Param = e.enabled;
+        loop_Param = e.target->getChecked();
 }
 
 void phasorClass::onGuiSliderEvent(ofxDatGuiSliderEvent e){

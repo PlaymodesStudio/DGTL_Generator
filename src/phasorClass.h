@@ -27,6 +27,7 @@ public:
     void audioIn(float * input, int bufferSize, int nChannels);
     
     void onGuiButtonEvent(ofxDatGuiButtonEvent e);
+    void onGuiToggleEvent(ofxDatGuiToggleEvent e);
     void onGuiSliderEvent(ofxDatGuiSliderEvent e);
     
 private:

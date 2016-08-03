@@ -35,7 +35,7 @@ public:
     
     void setIndexCount(int val){indexCount_Param = val;};
     
-    void onGuiButtonEvent(ofxDatGuiButtonEvent e);
+    void onGuiToggleEvent(ofxDatGuiToggleEvent e);
     void onGuiDropdownEvent(ofxDatGuiDropdownEvent e);
     
 private:

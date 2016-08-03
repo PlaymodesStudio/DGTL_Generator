@@ -20,7 +20,7 @@ public:
     void setup();
     int computeFunc(int index);
     
-    void onGuiButtonEvent(ofxDatGuiButtonEvent e);
+    void onGuiToggleEvent(ofxDatGuiToggleEvent e);
     void setIndexCount(int indexCount){indexCount_Param = indexCount;};
     
 private:
