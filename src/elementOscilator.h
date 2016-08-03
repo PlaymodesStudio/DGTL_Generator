@@ -58,6 +58,7 @@ private:
     ofParameter<float>  randomAdd_Param;
     
     float oldPhasor;
+    int     prevIndex;
     
     oscTypes modulation;
     

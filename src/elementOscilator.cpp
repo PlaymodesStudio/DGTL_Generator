@@ -47,7 +47,10 @@ void elementOscilator::setup(){
 
 void elementOscilator::computeFunc(float *infoVec, float phasor){
     
-    for (int index = 0; index < indexCount_Param ; index++){
+    for (int i = 0; i < indexCount_Param ; i++){
+        
+        int index = i;
+        
         //get phasor to be w (radial freq)
         float w = (phasor*2*PI);// + (phaseOffset_Param*2*PI);
         
@@ -130,10 +133,15 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
             }
             case rand1Osc:
             {
-                if(phasor < oldPhasor)
-                    val = ofRandom(1);
+                if(phasor < oldPhasor){
+                    if(index != prevIndex)
+                        val = ofRandom(1);
+                    else
+                        val = infoVec[i-1];
+                }
                 else
-                    val = infoVec[index];
+                    val = infoVec[i];
+                
                 break;
             }
             case rand2Osc:
@@ -148,11 +156,11 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
         
         
         computeMultiplyMod(&val);
-        if(index == indexCount_Param-1)
+        if(i == indexCount_Param-1)
             oldPhasor = phasor;
         
-        infoVec[index] = val;
-        
+        infoVec[i] = val;
+        prevIndex = index;
     }
 }
 
