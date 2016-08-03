@@ -30,34 +30,19 @@ void ofApp::setup(){
     
     //Setup of the phasor, wich controls the oscilator generator
     phasor.setup();
-    
-    //Gui creation
-    //DAT GUI
-//    gui = new ofxDatGui();
-//    gui->addHeader();
-//    gui->setPosition(0, 200);
-//    gui->addLabel("Main Config");
-//    gui->addSlider("pixelNum", 1, PIXEL_X_BAR, 432)->setPrecision(0);
-//    gui->addSlider(delay_frames.set("Delay", 1, 0, 30));
-//    gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
-    
-    //ofxGui
-    gui.setup("Main Gui");
-    gui.setPosition(0, 200);
-    gui.add(delay_frames.set("Delay", 1, 0, 30));
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    //Phasor updates automatically at audio rate
+    
+    //Calculation of the oscilators for each element, with phasor info
     singleGenerator.computeFunc(infoVec.data(), phasor.getPhasor());
     
-    
-    
+    //Fill the fbo with the information in infoVec, and delaying it and modifing with it's controls
     delayControler.applyDelayToTexture(pixelContent, infoVec);
     
-
+    //Pass texture to syphon
     syphonServer.publishTexture(&pixelContent.getTexture());
 }
 
@@ -65,22 +50,24 @@ void ofApp::update(){
 void ofApp::draw(){
     ofSetColor(255);
     
+    //Draw the fbo
     pixelContent.draw(0,0, ofGetWidth(), 5*ofGetHeight()/11);
     
+    //Draw the Bars
     float wid = (float)ofGetWidth()/pixelNum;
     float hei = 5*ofGetHeight()/11;
     for(int i = 0; i < pixelNum; i++)
         ofDrawRectangle(i*wid, (1-infoVec[i])*hei+hei, wid, infoVec[i]*hei);
     
     
+    //draw the phasor evolution
     ofDrawTriangle(0, ofGetHeight(), ofGetWidth(), ofGetHeight(), ofGetWidth(), 10*ofGetHeight()/11);
     ofSetColor(127);
     ofDrawRectangle((float)ofGetWidth() * phasor.getPhasor(), 10*ofGetHeight()/11, 5, ofGetHeight()/11);
     
+    //Draw the framerate
     ofSetColor(255, 0,0);
     ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, ofGetHeight()-20);
-    
-    gui.draw();
 }
 
 //--------------------------------------------------------------
@@ -136,30 +123,4 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
-}
-
-
-void ofApp::onGuiSliderEvent(ofxDatGuiSliderEvent e){
-    if(e.target->getName() == "pixelNum"){
-        //change pixelNum val
-//        pixelNum = e.value;
-//        
-//        //update pixelNum in GenerativeFunc
-//        singleGenerator.setIndexCount(pixelNum);
-//        
-//        //Change vector storing values size
-//        infoVec.clear();
-//        infoVec.resize(pixelNum);
-//        
-//        //Change horizontal slider max, and crop it if it get out of boundaries
-//        auto sli = gui->getSlider("Horizontal Frequency");
-//        sli->setMax(pixelNum);
-//        if(sli->getValue() > pixelNum)
-//            sli->setValue(pixelNum);
-//        
-//        
-//        //Change FBO
-//        pixelContent.allocate(pixelNum, NUM_BARS);
-        
-    }
 }

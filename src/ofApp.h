@@ -2,8 +2,6 @@
 
 #include "ofMain.h"
 #include "phasorClass.h"
-#include "ofxDatGui.h"
-#include "ofxGui.h"
 #include "ofxSyphon.h"
 #include "elementOscilator.h"
 #include "delayControl.h"
@@ -31,29 +29,17 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     
-    void onGuiSliderEvent(ofxDatGuiSliderEvent e);
-    
-    
     int pixelNum;
     
-    
-    int count;
     vector<float> infoVec;
-    deque<vector<float>> infoVec_Buffer;
-    ofParameter<int> delay_frames;
     ofFbo pixelContent;
     phasorClass phasor;
-    
-//    ofxDatGui* gui;
-    ofxPanel gui;
-    
-    ofParameter<float> freq, hFreq, powVal;
     
     ofxSyphonServer syphonServer;
     
     
     elementOscilator singleGenerator;
-    delayControl        delayControler;
+    delayControl     delayControler;
     
 		
 };

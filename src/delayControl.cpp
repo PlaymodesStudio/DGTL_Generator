@@ -18,13 +18,7 @@ void delayControl::setup(){
     generatorGui->addSlider(delay_frames.set("Delay", 1, 0, 40))->setPrecision(0);
     generatorGui->addToggle("Invert")->setChecked(false);
     generatorGui->addSlider(symmetry_Param.set("Symmetry", 0, 0, 10));
-    //generatorGui->addSlider(indexOffset_Param.set("Index Offset", 0, -indexCount_Param, indexCount_Param));
-    generatorGui->addSlider(indexQuant_Param.set("Index Quantization", 1, 1, indexCount_Param));
     generatorGui->addSlider(comb_Param.set("Combination", 0, 0, 1));
-    //generatorGui->addBreak();
-    //generatorGui->addLabel("Multipliers");
-    //generatorGui->addSlider(pow_Param.set("Pow", 1, -40, 40));
-    //generatorGui->addDropdown("Wave Select", {"sin", "cos", "tri", "square", "saw", "inverted saw", "rand1", "rand2"});
     
     generatorGui->onToggleEvent(this, &delayControl::onGuiToggleEvent);
 }
@@ -32,46 +26,20 @@ void delayControl::setup(){
 
 int delayControl::computeFunc(int index){
     
-//    bool odd = false;
-//    if((int)((index)/(indexCount_Param/(symmetry_Param+1)))%2 == 1 ) odd = true;
-//    
     //SYMMETRY santi
     int veusSym = indexCount_Param/(symmetry_Param+1);
     index = veusSym-abs((((int)(index/veusSym)%2) * veusSym)-(index%veusSym));
-//
-//    index = odd ? index-indexOffset_Param : index+indexOffset_Param;
-    
-    //    index += indexOffset_Param;
-    //    index %= indexCount_Param;
-    
-    
     
     //INVERSE
     //Fisrt we invert the index to simulate the wave goes from left to right, inverting indexes, if we want to invertit we don't do this calc
     if(!invert_Param)
         index = ((float)indexCount_Param-(float)index+1);
     
-    
     //QUANTIZE
-    index = ceil(index/indexQuant_Param);
-    
-    //cout<<index<<"-" ;
+    //index = ceil(index/indexQuant_Param);
     
     //COMB
     index = abs(((index%2)*indexCount_Param*comb_Param)-index);
-    
-    
-    //float k = (((float)index/(float)indexCount_Param) + phaseOffset_Param) * 2 * PI;
-    
-    
-//    float indexFloat = index/indexCount_Param;
-//    if(pow_Param)
-//        indexFloat = (pow_Param < 0) ? pow(index, 1/(float)(-pow_Param)) : pow((float)index, pow_Param);
-//    index = indexFloat * indexCount_Param;
-//    index = round(index);
-//;
-//    index = floor(index);
-    
     
     return index;
 
@@ -80,24 +48,33 @@ int delayControl::computeFunc(int index){
 
 void delayControl::applyDelayToTexture(ofFbo &fbo, vector<float> infoVec){
     
+    //Fill the buffer with the new info of the current frame
     infoVecBuffer.push_back(infoVec);
     
+    //Use the fbo to paint on it
     fbo.begin();
     
+    //first color to black, for fixing isues
     ofSetColor(0);
     for(int j = 0 ; j < fbo.getHeight() ; j++){
+        //compute the index where there is the info we are interested
         int delayIndex = delay_frames*(computeFunc(j));
+        
+        //If we want to acces a position that is not existing, get the last position
         while(infoVecBuffer.size() <= delayIndex) delayIndex--;
+        
+        //Paint the square for each column
         for (int i = 0; i < fbo.getWidth() ; i++){
             ofSetColor(infoVecBuffer[delayIndex][i] * 255);
             ofDrawRectangle(i, j, 1, 1);
         }
     }
+    fbo.end();
     
+    
+    //If we have values that we will not use anymore, they are too far away, remove them
     while(infoVecBuffer.size() > delay_frames*fbo.getHeight())
         infoVecBuffer.pop_front();
-    
-    fbo.end();
 }
 
 
