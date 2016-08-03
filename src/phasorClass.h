@@ -20,7 +20,6 @@ public:
     ~phasorClass(){};
     void setup();
     
-    void setFrequency(float frequency){freq_Param = frequency;};
     float getPhasor();
     void resetPhasor(float phase);
     
@@ -30,12 +29,13 @@ public:
     void onGuiSliderEvent(ofxDatGuiSliderEvent e);
     
 private:
-    ofParameter<float> phasor;
-    ofParameter<float> phasorMod;
-    ofParameter<float> freq_Param;
-    ofParameter<float> BPM_Param;
-    ofParameter<float> initPhase_Param;
-    ofParameter<int> quant_Param;
+    ofParameter<float>  phasor;
+    ofParameter<float>  phasorMod;
+    ofParameter<float>  bpm_Param;
+    ofParameter<int>    beatsMult_Param;
+    ofParameter<int>    beatsDiv_Param;
+    ofParameter<float>  initPhase_Param;
+    ofParameter<int>    quant_Param;
     bool                loop_Param;
     
     ofxDatGui* gui;
