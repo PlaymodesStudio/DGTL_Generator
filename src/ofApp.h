@@ -39,7 +39,7 @@ class ofApp : public ofBaseApp{
     
     int count;
     vector<float> infoVec;
-    deque<pair<int,vector<float>>> infoVec_Buffer;
+    deque<vector<float>> infoVec_Buffer;
     ofParameter<int> delay_frames;
     ofFbo pixelContent;
     phasorClass phasor;

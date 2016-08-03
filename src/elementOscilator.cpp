@@ -30,7 +30,7 @@ void elementOscilator::setup(){
     generatorGui->addSlider(indexOffset_Param.set("Index Offset", 0, -indexCount_Param, indexCount_Param));
     generatorGui->addSlider(indexQuant_Param.set("Index Quantization", 1, 1, indexCount_Param));
     generatorGui->addSlider(comb_Param.set("Combination", 0, 0, 1));
-    generatorGui->addSlider(modulo_Param.set("Modulo", 1, 1, indexCount_Param));
+    generatorGui->addSlider(modulo_Param.set("Modulo", indexCount_Param, 1, indexCount_Param));
     generatorGui->addBreak();
     generatorGui->addLabel("Multipliers");
     generatorGui->addSlider(randomAdd_Param.set("Random addition", 0, -1, 1));

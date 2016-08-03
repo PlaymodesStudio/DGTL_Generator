@@ -29,39 +29,34 @@ void ofApp::setup(){
     gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
     gui->onButtonEvent(this, &ofApp::onGuiButtonEvent);
     
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     for (int i = 0; i < pixelNum ; i++){
         infoVec[i] = singleGenerator.computeFunc(phasor.getPhasor(), i);
+        //cout<< i << endl;
     }
-    pair<int, vector<float>> tempPair;
-    tempPair.first = ofGetFrameNum();
-    tempPair.second = infoVec;
-    infoVec_Buffer.push_back(tempPair);
+    infoVec_Buffer.push_back(infoVec);
     
-    cout<<infoVec_Buffer.size()<<endl;
+    //cout<<infoVec_Buffer.size()<<endl;
+    //cout<<endl;
     
     pixelContent.begin();
     
-        //ofSetColor(infoVec[i]*255);
-        for(int j = 0 ; j < pixelContent.getHeight() ; j++){
-            for(auto &tempInfoVec : infoVec_Buffer){
-                if(tempInfoVec.first == ofGetFrameNum() - (delay_frames*(delayControler.computeFunc(j)))){
-                    for (int i = 0; i < pixelContent.getWidth() ; i++){
-                    if(tempInfoVec.second.size()) ofSetColor(tempInfoVec.second[i] * 255);
-                    if(j == pixelContent.getHeight()-1 && i == pixelContent.getWidth()-1)
-                        infoVec_Buffer.pop_front();
-                    ofDrawRectangle(i, j, 1, 1);
-                    }
-                }
-            }
-            
-            
-        
+    ofSetColor(0);
+    //ofSetColor(infoVec[i]*255);
+    for(int j = 0 ; j < pixelContent.getHeight() ; j++){
+        int delayIndex = delay_frames*(delayControler.computeFunc(j));
+        while( infoVec_Buffer.size() <= delayIndex) delayIndex--;
+        for (int i = 0; i < pixelContent.getWidth() ; i++){
+            ofSetColor(infoVec_Buffer[delayIndex][i] * 255);
+            ofDrawRectangle(i, j, 1, 1);
+        }
     }
+    
+    while(infoVec_Buffer.size() > delay_frames*NUM_BARS)
+        infoVec_Buffer.pop_front();
     
     pixelContent.end();
     syphonServer.publishTexture(&pixelContent.getTexture());
