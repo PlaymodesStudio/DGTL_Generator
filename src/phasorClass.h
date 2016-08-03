@@ -27,11 +27,13 @@ public:
     void audioIn(float * input, int bufferSize, int nChannels);
     
     void onGuiButtonEvent(ofxDatGuiButtonEvent e);
+    void onGuiSliderEvent(ofxDatGuiSliderEvent e);
     
 private:
     ofParameter<float> phasor;
     ofParameter<float> phasorMod;
     ofParameter<float> freq_Param;
+    ofParameter<float> BPM_Param;
     ofParameter<float> initPhase_Param;
     ofParameter<int> quant_Param;
     bool                loop_Param;

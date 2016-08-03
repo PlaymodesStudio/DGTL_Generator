@@ -20,7 +20,8 @@ void phasorClass::setup(){
     soundStream.setInput(this);
     
     gui->setPosition(ofxDatGuiAnchor::TOP_LEFT);
-    gui->addSlider(freq_Param.set("Frequency", 1, 0, 10));
+    gui->addSlider(freq_Param.set("Frequency", 1, 0, 3));
+    gui->addSlider(BPM_Param.set("BPM", 60, 30, 180));
     gui->addSlider(quant_Param.set("Quantization", 30, 1, 30));
     gui->addBreak();
 //    gui->addLabel("Phasor Parameters");
@@ -28,6 +29,7 @@ void phasorClass::setup(){
     gui->addButton("Reset Phase");
     gui->addToggle("Loop")->setEnabled(true);
     gui->onButtonEvent(this, &phasorClass::onGuiButtonEvent);
+    gui->onSliderEvent(this, &phasorClass::onGuiSliderEvent);
 }
 
 
@@ -72,5 +74,12 @@ void phasorClass::onGuiButtonEvent(ofxDatGuiButtonEvent e){
     
     if(e.target->getName() == "Loop")
         loop_Param = e.enabled;
+}
+
+void phasorClass::onGuiSliderEvent(ofxDatGuiSliderEvent e){
+    if(e.target->getName() == "Frequency")
+        gui->getSlider("BPM")->setValue(e.value*60);
+    if(e.target->getName() == "BPM")
+        gui->getSlider("Frequency")->setValue(e.value/60);
 }
 
