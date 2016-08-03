@@ -48,7 +48,7 @@ int delayControl::computeFunc(int index){
     //INVERSE
     //Fisrt we invert the index to simulate the wave goes from left to right, inverting indexes, if we want to invertit we don't do this calc
     if(!invert_Param)
-        index = ((float)indexCount_Param-(float)index);
+        index = ((float)indexCount_Param-(float)index+1);
     
     
     //QUANTIZE
@@ -70,6 +70,7 @@ int delayControl::computeFunc(int index){
 //    index = round(index);
 //;
 //    index = floor(index);
+    
     
     return index;
 
