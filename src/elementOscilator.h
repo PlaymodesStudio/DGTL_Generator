@@ -30,7 +30,7 @@ public:
     
     void setup();
     
-    float computeFunc(float phasor, int index);
+    void computeFunc(float *infoVec, float phasor);
     void computeMultiplyMod(float* value);
     
     void setIndexCount(int val){indexCount_Param = val;};
@@ -56,6 +56,9 @@ private:
     ofParameter<float>  comb_Param;
     ofParameter<int>    modulo_Param;
     ofParameter<float>  randomAdd_Param;
+    
+    float oldPhasor;
+    int     prevIndex;
     
     oscTypes modulation;
     

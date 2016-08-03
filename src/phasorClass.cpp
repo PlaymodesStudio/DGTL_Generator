@@ -20,9 +20,10 @@ void phasorClass::setup(){
     soundStream.setInput(this);
     
     gui->setPosition(ofxDatGuiAnchor::TOP_LEFT);
-    gui->addSlider(freq_Param.set("Frequency", 1, 0, 3));
-    gui->addSlider(BPM_Param.set("BPM", 60, 30, 180));
-    gui->addSlider(quant_Param.set("Quantization", 30, 1, 30));
+    gui->addSlider(bpm_Param.set("BPM", 60, 30, 180));
+    gui->addSlider(beatsDiv_Param.set("Beats Div", 1, 1, 12));
+    gui->addSlider(beatsMult_Param.set("Beats Mult", 1, 1, 12));
+    gui->addSlider(quant_Param.set("Quantization", 40, 1, 30));
     gui->addBreak();
 //    gui->addLabel("Phasor Parameters");
     gui->addSlider(initPhase_Param.set("Initial phase", 0, 0, 1))->setPrecision(2);
@@ -44,8 +45,12 @@ void phasorClass::resetPhasor(float phase){
 
 void phasorClass::audioIn(float * input, int bufferSize, int nChannels){
     //tue phasor that goes from 0 to 1 at desired frequency
+    float freq = bpm_Param/60;
+    freq *= beatsMult_Param;
+    freq /= beatsDiv_Param;
+    
     if ( phasor < 1)
-        phasor += (1./(((float)44100/(float)512)/(freq_Param)));
+        phasor += (1./(((float)44100/(float)512)/freq));
     
     if ( phasor >= 1.0 && loop_Param) phasor -= 1.0;
     
@@ -80,9 +85,6 @@ void phasorClass::onGuiToggleEvent(ofxDatGuiToggleEvent e){
 }
 
 void phasorClass::onGuiSliderEvent(ofxDatGuiSliderEvent e){
-    if(e.target->getName() == "Frequency")
-        gui->getSlider("BPM")->setValue(e.value*60);
-    if(e.target->getName() == "BPM")
-        gui->getSlider("Frequency")->setValue(e.value/60);
+
 }
 

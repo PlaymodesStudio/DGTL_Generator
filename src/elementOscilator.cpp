@@ -45,105 +45,123 @@ void elementOscilator::setup(){
     generatorGui->onDropdownEvent(this, &elementOscilator::onGuiDropdownEvent);
 }
 
-float elementOscilator::computeFunc(float phasor, int index){
-    //get phasor to be w (radial freq)
-    float w = (phasor*2*PI);// + (phaseOffset_Param*2*PI);
+void elementOscilator::computeFunc(float *infoVec, float phasor){
     
-    bool odd = false;
-    if((int)((index)/(indexCount_Param/(symmetry_Param+1)))%2 == 1 ) odd = true;
-
-    //SYMMETRY santi
-    int veusSym = indexCount_Param/(symmetry_Param+1);
-    index = veusSym-abs((((int)(index/veusSym)%2) * veusSym)-(index%veusSym));
-    
-    index = odd ? index-indexOffset_Param : index+indexOffset_Param;
-    
-//    index += indexOffset_Param;
-//    index %= indexCount_Param;
-    
-    
-    
-    //INVERSE
-    //Fisrt we invert the index to simulate the wave goes from left to right, inverting indexes, if we want to invertit we don't do this calc
-    if(!invert_Param)
-        index = ((float)indexCount_Param-(float)index);
-    
-    
-    //QUANTIZE
-    index = ceil(index/indexQuant_Param);
-    
-    //cout<<index<<"-" ;
-    
-    //COMB
-    index = abs(((index%2)*indexCount_Param*comb_Param)-index);
-    
-    //modeulsafidosia
-    index %= modulo_Param;
-    
-    
-    float k = (((float)index/(float)indexCount_Param) + phaseOffset_Param) * 2 * PI;
-    
-    
-    
-    //invert it?
-    //k *= invert_Param;
-    k *=  freq_Param; //Index Modifiers
-    
-    
-    float linPhase = fmod(w+k, 2*PI) / (2*PI);
-    float val = 0;
-    switch (modulation) {
-        case sinOsc:
-        {
-            val = sin(w+k);
-            val = ofMap(val, -1, 1, 0, 1);
-            break;
+    for (int i = 0; i < indexCount_Param ; i++){
         
+        int index = i;
+        
+        //get phasor to be w (radial freq)
+        float w = (phasor*2*PI);// + (phaseOffset_Param*2*PI);
+        
+        bool odd = false;
+        if((int)((index)/(indexCount_Param/(symmetry_Param+1)))%2 == 1 ) odd = true;
+        
+        //SYMMETRY santi
+        int veusSym = indexCount_Param/(symmetry_Param+1);
+        index = veusSym-abs((((int)(index/veusSym)%2) * veusSym)-(index%veusSym));
+        
+        index = odd ? index-indexOffset_Param : index+indexOffset_Param;
+        
+        //    index += indexOffset_Param;
+        //    index %= indexCount_Param;
+        
+        
+        
+        //INVERSE
+        //Fisrt we invert the index to simulate the wave goes from left to right, inverting indexes, if we want to invertit we don't do this calc
+        if(!invert_Param)
+            index = ((float)indexCount_Param-(float)index);
+        
+        
+        //QUANTIZE
+        index = ceil(index/indexQuant_Param);
+        
+        //cout<<index<<"-" ;
+        
+        //COMB
+        index = abs(((index%2)*indexCount_Param*comb_Param)-index);
+        
+        //modeulsafidosia
+        index %= modulo_Param;
+        
+        
+        float k = (((float)index/(float)indexCount_Param) + phaseOffset_Param) * 2 * PI;
+        
+        
+        
+        //invert it?
+        //k *= invert_Param;
+        k *=  freq_Param; //Index Modifiers
+        
+        
+        float linPhase = fmod(w+k, 2*PI) / (2*PI);
+        float val = 0;
+        switch (modulation) {
+            case sinOsc:
+            {
+                val = sin(w+k);
+                val = ofMap(val, -1, 1, 0, 1);
+                break;
+                
+            }
+            case cosOsc:
+            {
+                val = cos(w+k);
+                val = ofMap(val, -1, 1, 0, 1);
+                break;
+            }
+            case triOsc:
+            {
+                val = 1-(fabs((linPhase * (-2)) + 1));
+                break;
+            }
+            case squareOsc:
+            {
+                val = (linPhase > pwm_Param) ? 1 : 0;
+                break;
+            }
+            case sawOsc:
+            {
+                val = 1-linPhase;
+                break;
+            }
+            case sawInvOsc:
+            {
+                val = linPhase;
+                break;
+            }
+            case rand1Osc:
+            {
+                if(phasor < oldPhasor){
+                    if(index != prevIndex)
+                        val = ofRandom(1);
+                    else
+                        val = infoVec[i-1];
+                }
+                else
+                    val = infoVec[i];
+                
+                break;
+            }
+            case rand2Osc:
+            {
+                val = ofNoise(phasor+index);
+                break;
+            }
+            default:
+                break;
         }
-        case cosOsc:
-        {
-            val = cos(w+k);
-            val = ofMap(val, -1, 1, 0, 1);
-            break;
-        }
-        case triOsc:
-        {
-            val = 1-(fabs((linPhase * (-2)) + 1));
-            break;
-        }
-        case squareOsc:
-        {
-            val = (linPhase > pwm_Param) ? 1 : 0;
-            break;
-        }
-        case sawOsc:
-        {
-            val = 1-linPhase;
-            break;
-        }
-        case sawInvOsc:
-        {
-            val = linPhase;
-            break;
-        }
-        case rand1Osc:
-        {
-            val = ofNoise(ofGetElapsedTimef()*2+((float)index/(float)indexCount_Param)*freq_Param);
-            val = ofMap(val, 0.25, 0.75, 0, 1, true);
-            break;
-        }
-        case rand2Osc:
-        {
-            val = ofNoise(phasor+index);
-            break;
-        }
-        default:
-            break;
+        
+        
+        
+        computeMultiplyMod(&val);
+        if(i == indexCount_Param-1)
+            oldPhasor = phasor;
+        
+        infoVec[i] = val;
+        prevIndex = index;
     }
-    
-
-    computeMultiplyMod(&val);
-    return val;
 }
 
 void elementOscilator::computeMultiplyMod(float *value){

@@ -20,23 +20,26 @@ void ofApp::setup(){
     pixelContent.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
     phasor.setup();
     
-    gui = new ofxDatGui();
-    gui->addHeader();
-    gui->setPosition(0, 200);
-    gui->addLabel("Main Config");
-    gui->addSlider("pixelNum", 1, PIXEL_X_BAR, 432)->setPrecision(0);
-    gui->addSlider(delay_frames.set("Delay", 1, 0, 30));
-    gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
-    gui->onToggleEvent(this, &ofApp::onGuiToggleEvent);
+//    gui = new ofxDatGui();
+//    gui->addHeader();
+//    gui->setPosition(0, 200);
+//    gui->addLabel("Main Config");
+//    gui->addSlider("pixelNum", 1, PIXEL_X_BAR, 432)->setPrecision(0);
+//    gui->addSlider(delay_frames.set("Delay", 1, 0, 30));
+//    gui->onSliderEvent(this, &ofApp::onGuiSliderEvent);
+//    gui->onButtonEvent(this, &ofApp::onGuiButtonEvent);
+    
+    gui.setup("Main Gui");
+    gui.setPosition(0, 200);
+    gui.add(delay_frames.set("Delay", 1, 0, 30));
     
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    for (int i = 0; i < pixelNum ; i++){
-        infoVec[i] = singleGenerator.computeFunc(phasor.getPhasor(), i);
-        //cout<< i << endl;
-    }
+
+    singleGenerator.computeFunc(infoVec.data(), phasor.getPhasor());
+    
     infoVec_Buffer.push_back(infoVec);
     
     //cout<<infoVec_Buffer.size()<<endl;
@@ -80,6 +83,8 @@ void ofApp::draw(){
     
     ofSetColor(255, 0,0);
     ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, ofGetHeight()-20);
+    
+    gui.draw();
 }
 
 //--------------------------------------------------------------
@@ -139,33 +144,31 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 
 void ofApp::onGuiSliderEvent(ofxDatGuiSliderEvent e){
-    if(e.target->getName() == "Frequency")
-        phasor.setFrequency(e.value);
     if(e.target->getName() == "pixelNum"){
         //change pixelNum val
-        pixelNum = e.value;
-        
-        //update pixelNum in GenerativeFunc
-        singleGenerator.setIndexCount(pixelNum);
-        
-        //Change vector storing values size
-        infoVec.clear();
-        infoVec.reserve(pixelNum);
-        
-        //Change horizontal slider max, and crop it if it get out of boundaries
-        auto sli = gui->getSlider("Horizontal Frequency");
-        sli->setMax(pixelNum);
-        if(sli->getValue() > pixelNum)
-            sli->setValue(pixelNum);
-        
-        
-        //Change FBO
-        pixelContent.allocate(pixelNum, NUM_BARS);
+//        pixelNum = e.value;
+//        
+//        //update pixelNum in GenerativeFunc
+//        singleGenerator.setIndexCount(pixelNum);
+//        
+//        //Change vector storing values size
+//        infoVec.clear();
+//        infoVec.resize(pixelNum);
+//        
+//        //Change horizontal slider max, and crop it if it get out of boundaries
+//        auto sli = gui->getSlider("Horizontal Frequency");
+//        sli->setMax(pixelNum);
+//        if(sli->getValue() > pixelNum)
+//            sli->setValue(pixelNum);
+//        
+//        
+//        //Change FBO
+//        pixelContent.allocate(pixelNum, NUM_BARS);
         
     }
 }
 
-void ofApp::onGuiToggleEvent(ofxDatGuiToggleEvent e){
-    if(e.target->getName() == "Reset Phase")
-        phasor.resetPhasor(gui->getSlider("Initial Phase")->getValue());
+void ofApp::onGuiButtonEvent(ofxDatGuiButtonEvent e){
+//    if(e.target->getName() == "Reset Phase")
+//        phasor.resetPhasor(gui->getSlider("Initial Phase")->getValue());
 }

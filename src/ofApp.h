@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "phasorClass.h"
 #include "ofxDatGui.h"
+#include "ofxGui.h"
 #include "ofxSyphon.h"
 #include "elementOscilator.h"
 #include "delayControl.h"
@@ -44,8 +45,8 @@ class ofApp : public ofBaseApp{
     ofFbo pixelContent;
     phasorClass phasor;
     
-    ofxDatGui* gui;
-    ofxDatGuiWaveMonitor* plotter;
+//    ofxDatGui* gui;
+    ofxPanel gui;
     
     ofParameter<float> freq, hFreq, powVal;
     
