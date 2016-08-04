@@ -11,7 +11,7 @@
 
 #include "ofMain.h"
 #include "ofxOsc.h"
-#include "ofxGui.h"
+#include "ofxDatGui.h"
 
 class parametersControl{
 public:
@@ -25,7 +25,8 @@ public:
     
     void setup();
     
-    void drawGui(){gui.draw();};
+    void onGuiButtonEvent(ofxDatGuiButtonEvent e);
+    void onGuiToggleEvent(ofxDatGuiToggleEvent e);
     
 private:
     
@@ -33,7 +34,7 @@ private:
     ofParameterGroup oscilatorParams;
     ofParameterGroup delayParams;
     
-    ofxPanel gui;
+    ofxDatGui *datGui;
 };
 
 

@@ -12,8 +12,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxDatGui.h"
-#include "ofxGui.h"
 
 class phasorClass: public ofBaseSoundInput{
 public:
@@ -24,13 +22,7 @@ public:
     float getPhasor();
     void resetPhasor(bool &reset);
     
-    void drawGui(){gui2.draw();};
-    
     void audioIn(float * input, int bufferSize, int nChannels);
-    
-    void onGuiButtonEvent(ofxDatGuiButtonEvent e);
-    void onGuiToggleEvent(ofxDatGuiToggleEvent e);
-    void onGuiSliderEvent(ofxDatGuiSliderEvent e);
     
     ofParameterGroup getParameterGroup(){return parameters;};
     
@@ -45,9 +37,6 @@ private:
     ofParameter<int>    quant_Param;
     ofParameter<bool>   loop_Param;
     ofParameter<bool>   resetPhase_Param;
-    
-    ofxDatGui* gui;
-    ofxPanel gui2;
     
     
     ofSoundStream soundStream;

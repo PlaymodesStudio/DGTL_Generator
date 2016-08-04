@@ -73,8 +73,6 @@ void ofApp::draw(){
     //Draw the framerate
     ofSetColor(255, 0,0);
     ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, ofGetHeight()-20);
-    
-    paramsControl.drawGui();
 }
 
 //--------------------------------------------------------------

@@ -11,7 +11,6 @@
 
 phasorClass::phasorClass()
 {
-    gui = new ofxDatGui();
     loop_Param = true;
 }
 
@@ -30,22 +29,6 @@ void phasorClass::setup(){
     parameters.add(loop_Param.set("Loop", true));
     
     resetPhase_Param.addListener(this, &phasorClass::resetPhasor);
-    
-    gui2.setup(parameters);
-
-//    gui->setPosition(ofxDatGuiAnchor::TOP_LEFT);
-//    gui->addSlider(bpm_Param.set("BPM", 60, 30, 180));
-//    gui->addSlider(beatsDiv_Param.set("Beats Div", 1, 1, 12));
-//    gui->addSlider(beatsMult_Param.set("Beats Mult", 1, 1, 12));
-//    gui->addSlider(quant_Param.set("Quantization", 40, 1, 30));
-//    gui->addBreak();
-////    gui->addLabel("Phasor Parameters");
-//    gui->addSlider(initPhase_Param.set("Initial phase", 0, 0, 1))->setPrecision(2);
-//    gui->addButton("Reset Phase");
-//    gui->addToggle("Loop")->setEnabled(true);
-//    gui->onButtonEvent(this, &phasorClass::onGuiButtonEvent);
-//    gui->onToggleEvent(this, &phasorClass::onGuiToggleEvent);
-//    gui->onSliderEvent(this, &phasorClass::onGuiSliderEvent);
 }
 
 
@@ -86,20 +69,5 @@ void phasorClass::audioIn(float * input, int bufferSize, int nChannels){
 //        phasorMod = 0;
     
     
-}
-
-
-void phasorClass::onGuiButtonEvent(ofxDatGuiButtonEvent e){
-//    if(e.target->getName() == "Reset Phase")
-//        resetPhasor(true);
-
-}
-void phasorClass::onGuiToggleEvent(ofxDatGuiToggleEvent e){
-    if(e.target->getName() == "Loop")
-        loop_Param = e.target->getChecked();
-}
-
-void phasorClass::onGuiSliderEvent(ofxDatGuiSliderEvent e){
-
 }
 
