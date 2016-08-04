@@ -27,6 +27,7 @@ public:
     
     void onGuiButtonEvent(ofxDatGuiButtonEvent e);
     void onGuiToggleEvent(ofxDatGuiToggleEvent e);
+    void onGuiDropdownEvent(ofxDatGuiDropdownEvent e);
     
 private:
     

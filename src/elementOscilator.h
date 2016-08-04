@@ -10,7 +10,6 @@
 #define elementOscilator_h
 
 #include "ofMain.h"
-#include "ofxDatGui.h"
 
 enum oscTypes{
     sinOsc = 1,
@@ -35,8 +34,7 @@ public:
     
     void setIndexCount(int val){indexCount_Param = val;};
     
-    void onGuiToggleEvent(ofxDatGuiToggleEvent e);
-    void onGuiDropdownEvent(ofxDatGuiDropdownEvent e);
+    ofParameterGroup getParameterGroup(){return parameters;};
     
 private:
     //Parameters
@@ -57,13 +55,10 @@ private:
     ofParameter<float>  comb_Param;
     ofParameter<int>    modulo_Param;
     ofParameter<float>  randomAdd_Param;
+    ofParameter<int>    waveSelect_Param;
     
-    float oldPhasor;
-    int     prevIndex;
-    
-    oscTypes modulation;
-    
-    ofxDatGui *generatorGui;
+    float               oldPhasor;
+    int                 prevIndex;
 };
 
 #endif /* elementOscilator_h */

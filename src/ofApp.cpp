@@ -34,6 +34,7 @@ void ofApp::setup(){
     
     //Paramters binding
     paramsControl.bindPhasorParams(phasor.getParameterGroup());
+    paramsControl.bindOscilatorParams(singleGenerator.getParameterGroup());
     paramsControl.setup();
 }
 

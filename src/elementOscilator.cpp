@@ -14,35 +14,24 @@ elementOscilator::elementOscilator(){
     pow_Param = 1;
     invert_Param = false;
     symmetry_Param = 0;
-    modulation = triOsc;
-    
-    generatorGui = new ofxDatGui();
 }
 
 void elementOscilator::setup(){
-    generatorGui->addHeader();
-    generatorGui->addLabel("Index Modify Parameters");
-    generatorGui->setPosition(ofxDatGuiAnchor::TOP_RIGHT);
-    generatorGui->addSlider(freq_Param.set("n Waves", 1, 0, indexCount_Param));
-    generatorGui->addSlider(phaseOffset_Param.set("Phase offset", 0, 0, 1));
-    generatorGui->addToggle("Invert")->setChecked(false);
-    generatorGui->addSlider(symmetry_Param.set("Symmetry", 0, 0, 10));
-    generatorGui->addSlider(indexOffset_Param.set("Index Offset", 0, -indexCount_Param, indexCount_Param));
-    generatorGui->addSlider(indexQuant_Param.set("Index Quantization", 1, 1, indexCount_Param));
-    generatorGui->addSlider(comb_Param.set("Combination", 0, 0, 1));
-    generatorGui->addSlider(modulo_Param.set("Modulo", indexCount_Param, 1, indexCount_Param));
-    generatorGui->addBreak();
-    generatorGui->addLabel("Multipliers");
-    generatorGui->addSlider(randomAdd_Param.set("Random addition", 0, -1, 1));
-    generatorGui->addSlider(quant_Param.set("Quantization", 0, 0, 1));
-    generatorGui->addSlider(scale_Param.set("Scale", 1, 0, 2));
-    generatorGui->addSlider(offset_Param.set("Offset", 0, -1, 1));
-    generatorGui->addSlider(pow_Param.set("Pow", 1, -40, 40));
-    generatorGui->addSlider(pwm_Param.set("Square PWM", 0.5, 0, 1));
-    generatorGui->addDropdown("Wave Select", {"sin", "cos", "tri", "square", "saw", "inverted saw", "rand1", "rand2"});
-    
-    generatorGui->onToggleEvent(this, &elementOscilator::onGuiToggleEvent);
-    generatorGui->onDropdownEvent(this, &elementOscilator::onGuiDropdownEvent);
+    parameters.add(freq_Param.set("n Waves", 1, 0, indexCount_Param));
+    parameters.add(phaseOffset_Param.set("Phase offset", 0, 0, 1));
+    parameters.add(invert_Param.set("Invert", false));
+    parameters.add(symmetry_Param.set("Symmetry", 0, 0, 10));
+    parameters.add(indexOffset_Param.set("Index Offset", 0, -indexCount_Param, indexCount_Param));
+    parameters.add(indexQuant_Param.set("Index Quantization", 1, 1, indexCount_Param));
+    parameters.add(comb_Param.set("Combination", 0, 0, 1));
+    parameters.add(modulo_Param.set("Modulo", indexCount_Param, 1, indexCount_Param));
+    parameters.add(randomAdd_Param.set("Random addition", 0, -1, 1));
+    parameters.add(quant_Param.set("Quantization", 0, 0, 1));
+    parameters.add(scale_Param.set("Scale", 1, 0, 2));
+    parameters.add(offset_Param.set("Offset", 0, -1, 1));
+    parameters.add(pow_Param.set("Pow", 1, -40, 40));
+    parameters.add(pwm_Param.set("Square PWM", 0.5, 0, 1));
+    parameters.add(waveSelect_Param.set("Wave Select", 0, 0, 7));
 }
 
 void elementOscilator::computeFunc(float *infoVec, float phasor){
@@ -97,7 +86,7 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
         
         float linPhase = fmod(w+k, 2*PI) / (2*PI);
         float val = 0;
-        switch (modulation) {
+        switch (static_cast<oscTypes>(waveSelect_Param.get()+1)) {
             case sinOsc:
             {
                 val = sin(w+k);
@@ -187,18 +176,6 @@ void elementOscilator::computeMultiplyMod(float *value){
         *value = quant_Param*floor(*value/quant_Param);
     
 }
-
-
-void elementOscilator::onGuiToggleEvent(ofxDatGuiToggleEvent e){
-    if(e.target->getName() == "Invert")
-        invert_Param = e.target->getChecked();
-}
-
-void elementOscilator::onGuiDropdownEvent(ofxDatGuiDropdownEvent e){
-    if(e.target->getName() == "Wave Select")
-        modulation = static_cast<oscTypes>(e.child+1);
-}
-
 
 
 
