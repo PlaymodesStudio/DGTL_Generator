@@ -30,6 +30,8 @@ public:
     void onGuiToggleEvent(ofxDatGuiToggleEvent e);
     void onGuiDropdownEvent(ofxDatGuiDropdownEvent e);
     
+    void listenerFunction(ofAbstractParameter& e);
+    
 private:
     
     ofParameterGroup phasorParams;

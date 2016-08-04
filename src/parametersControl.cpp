@@ -10,6 +10,9 @@
 
 void parametersControl::setup(){
     //DatGui
+    
+    ofxDatGuiLog::quiet();
+    
     datGui = new ofxDatGui();
     datGui->addHeader();
     datGui->setPosition(ofxDatGuiAnchor::TOP_LEFT);
@@ -58,6 +61,9 @@ void parametersControl::setup(){
     datGui->onDropdownEvent(this, &parametersControl::onGuiDropdownEvent);
     
     
+    //add listerners for midi sending when parameter is changed
+    ofAddListener(phasorParams.parameterChangedE(), this, &parametersControl::listenerFunction);
+    
     //OSC
     oscReceiver.setup(12345);
     
@@ -97,9 +103,7 @@ void parametersControl::update(){
             if(absParam.type() == typeid(ofParameter<bool>).name())
                 oscilatorParams.getBool(splitAddress[2]) = m.getArgAsBool(0);
         }
-        
     }
-
 }
 
 
@@ -120,4 +124,28 @@ void parametersControl::onGuiToggleEvent(ofxDatGuiToggleEvent e){
 void parametersControl::onGuiDropdownEvent(ofxDatGuiDropdownEvent e){
     if(e.target->getName() == "Wave Select")
         oscilatorParams.getInt("Wave Select") = (e.child);
+}
+
+
+void parametersControl::listenerFunction(ofAbstractParameter& e){
+    int position = 0;
+    
+    
+    int normalizedVal = 0;
+    if(e.type() == typeid(ofParameter<float>).name()){
+        ofParameter<float> castedParam = e.cast<float>();
+        normalizedVal = ofMap(castedParam, castedParam.getMin(), castedParam.getMax(), 0, 127);
+        position = castedParam.getFirstParent().getPosition(e.getName());
+    }
+    else if(e.type() == typeid(ofParameter<int>).name()){
+        ofParameter<int> castedParam = e.cast<int>();
+        normalizedVal = ofMap(castedParam, castedParam.getMin(), castedParam.getMax(), 0, 127);
+        position = castedParam.getFirstParent().getPosition(e.getName());
+    }
+    else if(e.type() == typeid(ofParameter<bool>).name()){
+        ofParameter<bool> castedParam = e.cast<bool>();
+        normalizedVal = castedParam ? 127 : 0;
+        position = castedParam.getFirstParent().getPosition(e.getName());
+    }
+    cout<<"Para Change: "<< e.getName() << " |pos: " << position << " |val: " << e  << " |MIDI: " << normalizedVal << endl;
 }
