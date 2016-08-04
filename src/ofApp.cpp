@@ -30,6 +30,11 @@ void ofApp::setup(){
     
     //Setup of the phasor, wich controls the oscilator generator
     phasor.setup();
+    
+    
+    //Paramters binding
+    paramsControl.bindPhasorParams(phasor.getParameterGroup());
+    paramsControl.setup();
 }
 
 //--------------------------------------------------------------
@@ -68,6 +73,8 @@ void ofApp::draw(){
     //Draw the framerate
     ofSetColor(255, 0,0);
     ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, ofGetHeight()-20);
+    
+    paramsControl.drawGui();
 }
 
 //--------------------------------------------------------------

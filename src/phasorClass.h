@@ -13,6 +13,7 @@
 
 #include "ofMain.h"
 #include "ofxDatGui.h"
+#include "ofxGui.h"
 
 class phasorClass: public ofBaseSoundInput{
 public:
@@ -21,7 +22,9 @@ public:
     void setup();
     
     float getPhasor();
-    void resetPhasor(float phase);
+    void resetPhasor(bool &reset);
+    
+    void drawGui(){gui2.draw();};
     
     void audioIn(float * input, int bufferSize, int nChannels);
     
@@ -29,7 +32,10 @@ public:
     void onGuiToggleEvent(ofxDatGuiToggleEvent e);
     void onGuiSliderEvent(ofxDatGuiSliderEvent e);
     
+    ofParameterGroup getParameterGroup(){return parameters;};
+    
 private:
+    ofParameterGroup    parameters;
     ofParameter<float>  phasor;
     ofParameter<float>  phasorMod;
     ofParameter<float>  bpm_Param;
@@ -37,9 +43,11 @@ private:
     ofParameter<int>    beatsDiv_Param;
     ofParameter<float>  initPhase_Param;
     ofParameter<int>    quant_Param;
-    bool                loop_Param;
+    ofParameter<bool>   loop_Param;
+    ofParameter<bool>   resetPhase_Param;
     
     ofxDatGui* gui;
+    ofxPanel gui2;
     
     
     ofSoundStream soundStream;

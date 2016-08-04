@@ -11,6 +11,7 @@
 
 #include "ofMain.h"
 #include "ofxOsc.h"
+#include "ofxGui.h"
 
 class parametersControl{
 public:
@@ -18,9 +19,21 @@ public:
     parametersControl(){};
     ~parametersControl(){};
     
+    void bindPhasorParams(ofParameterGroup paramGroup){phasorParams = paramGroup;};
+    void bindOscilatorParams(ofParameterGroup paramGroup){oscilatorParams = paramGroup;};
+    void bindDelayParams(ofParameterGroup paramGroup){delayParams = paramGroup;};
+    
     void setup();
     
+    void drawGui(){gui.draw();};
     
+private:
+    
+    ofParameterGroup phasorParams;
+    ofParameterGroup oscilatorParams;
+    ofParameterGroup delayParams;
+    
+    ofxPanel gui;
 };
 
 

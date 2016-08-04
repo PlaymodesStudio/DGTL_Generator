@@ -5,6 +5,7 @@
 #include "ofxSyphon.h"
 #include "elementOscilator.h"
 #include "delayControl.h"
+#include "parametersControl.h"
 
 static const int NUM_BARS = 11;
 static const int PIXEL_X_BAR = 432;
@@ -41,5 +42,6 @@ class ofApp : public ofBaseApp{
     elementOscilator singleGenerator;
     delayControl     delayControler;
     
+    parametersControl paramsControl;
 		
 };

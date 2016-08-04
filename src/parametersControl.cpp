@@ -7,3 +7,10 @@
 //
 
 #include "parametersControl.h"
+
+void parametersControl::setup(){
+    gui.setup(phasorParams);
+    //gui.add(oscilatorParams);
+    //gui.add(delayParams);
+}
+
