@@ -9,18 +9,10 @@
 #include "delayControl.h"
 
 void delayControl::setup(){
-    generatorGui = new ofxDatGui();
-    
-    generatorGui->addHeader();
-    generatorGui->setPosition(300, 300);
-    generatorGui->addLabel("Delay Modify Parameters");
-    generatorGui->setPosition(ofxDatGuiAnchor::TOP_RIGHT);
-    generatorGui->addSlider(delay_frames.set("Delay", 1, 0, 40))->setPrecision(0);
-    generatorGui->addToggle("Invert")->setChecked(false);
-    generatorGui->addSlider(symmetry_Param.set("Symmetry", 0, 0, 10));
-    generatorGui->addSlider(comb_Param.set("Combination", 0, 0, 1));
-    
-    generatorGui->onToggleEvent(this, &delayControl::onGuiToggleEvent);
+    parameters.add(delay_frames.set("Delay", 1, 0, 40));
+    parameters.add(invert_Param.set("Invert", false));
+    parameters.add(symmetry_Param.set("Symmetry", 0, 0, 10));
+    parameters.add(comb_Param.set("Combination", 0, 0, 1));
 }
 
 
@@ -75,10 +67,4 @@ void delayControl::applyDelayToTexture(ofFbo &fbo, vector<float> infoVec){
     //If we have values that we will not use anymore, they are too far away, remove them
     while(infoVecBuffer.size() > delay_frames*fbo.getHeight())
         infoVecBuffer.pop_front();
-}
-
-
-void delayControl::onGuiToggleEvent(ofxDatGuiToggleEvent e){
-    if(e.target->getName() == "Invert")
-        invert_Param = e.target->getChecked();
 }

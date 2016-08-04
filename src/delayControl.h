@@ -10,7 +10,6 @@
 #define delayControl_h
 
 #include "ofMain.h"
-#include "ofxDatGui.h"
 
 class delayControl{
 public:
@@ -21,19 +20,20 @@ public:
     int computeFunc(int index);
     void applyDelayToTexture(ofFbo &fbo, vector<float> infoVec);
     
-    void onGuiToggleEvent(ofxDatGuiToggleEvent e);
     void setIndexCount(int indexCount){indexCount_Param = indexCount;};
+    
+    
+    ofParameterGroup getParameterGroup(){return parameters;};
     
 private:
     
-    ofxDatGui *generatorGui;
-    
     //Parameters
+    ofParameterGroup    parameters;
     ofParameter<int>    indexCount_Param; //The max number you will get from index
     ofParameter<bool>   invert_Param;
     ofParameter<int>    symmetry_Param;
     ofParameter<float>  comb_Param;
-    ofParameter<float>  delay_frames;
+    ofParameter<int>    delay_frames;
     
     //Buffer of intoVec, we use deque to be able to create a circular buffer, erase the old values
     deque<vector<float>> infoVecBuffer;

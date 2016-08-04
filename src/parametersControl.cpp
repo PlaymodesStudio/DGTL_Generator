@@ -44,6 +44,15 @@ void parametersControl::setup(){
     datGui->addSlider(oscilatorParams.getInt("Pow"));
     datGui->addSlider(oscilatorParams.getFloat("Square PWM"));
     datGui->addDropdown("Wave Select", {"sin", "cos", "tri", "square", "saw", "inverted saw", "rand1", "rand2"});
+    
+    
+    //DELAY
+    datGui->addBreak();
+    datGui->addLabel("Delay");
+    datGui->addSlider(delayParams.getInt("Delay"));
+    datGui->addToggle("Invert ")->setChecked(false);
+    datGui->addSlider(delayParams.getInt("Symmetry"));
+    datGui->addSlider(delayParams.getFloat("Combination"));
 //
     datGui->onButtonEvent(this, &parametersControl::onGuiButtonEvent);
     datGui->onToggleEvent(this, &parametersControl::onGuiToggleEvent);
@@ -61,6 +70,8 @@ void parametersControl::onGuiToggleEvent(ofxDatGuiToggleEvent e){
         phasorParams.getBool("Loop") = e.target->getChecked();
     if(e.target->getName() == "Invert")
         oscilatorParams.getBool("Invert") = e.target->getChecked();
+    if(e.target->getName() == "Invert ")
+        delayParams.getBool("Invert") = e.target->getChecked();
 }
 
 void parametersControl::onGuiDropdownEvent(ofxDatGuiDropdownEvent e){
