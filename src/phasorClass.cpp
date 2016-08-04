@@ -23,7 +23,7 @@ void phasorClass::setup(){
     parameters.add(bpm_Param.set("BPM", 60, 30, 180));
     parameters.add(beatsDiv_Param.set("Beats Div", 1, 1, 12));
     parameters.add(beatsMult_Param.set("Beats Mult", 1, 1, 12));
-    parameters.add(quant_Param.set("Quantization", 40, 1, 30));
+    parameters.add(quant_Param.set("Quantization", 40, 1, 40));
     parameters.add(initPhase_Param.set("Initial phase", 0, 0, 1));
     parameters.add(resetPhase_Param.set("Reset Phase", false));
     parameters.add(loop_Param.set("Loop", true));
@@ -43,12 +43,12 @@ void phasorClass::resetPhasor(bool &reset){
 
 void phasorClass::audioIn(float * input, int bufferSize, int nChannels){
     //tue phasor that goes from 0 to 1 at desired frequency
-    float freq = bpm_Param/60;
-    freq *= beatsMult_Param;
-    freq /= beatsDiv_Param;
+    float freq = (float)bpm_Param/(float)60;
+    freq = freq * (float)beatsMult_Param;
+    freq = (float)freq / (float)beatsDiv_Param;
     
     if ( phasor < 1)
-        phasor += (1./(((float)44100/(float)512)/freq));
+        phasor += (1.0f/(float)(((float)44100/(float)512)/(float)freq));
     
     if ( phasor >= 1.0 && loop_Param) phasor -= 1.0;
     
@@ -56,18 +56,10 @@ void phasorClass::audioIn(float * input, int bufferSize, int nChannels){
     phasorMod = phasor;
     
     //Quantization
-    if(quant_Param != 30){
+    if(quant_Param != 40){
         phasorMod = (int)(phasorMod*quant_Param);
         phasorMod /= quant_Param;
     }
-    
-    
-    //Hold to freq
-    //No control over phase holding
-//    phasorMod *= (1.0f/(1.0f-holdTime));
-//    if(phasorMod >= 1)
-//        phasorMod = 0;
-    
     
 }
 

@@ -135,7 +135,8 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
             }
             case rand2Osc:
             {
-                val = ofNoise(phasor+index);
+                val = ofNoise(w+((float)index/(float)indexCount_Param));
+                val = ofMap(val, 0.25, 0.75, 0, 1, true);
                 break;
             }
             default:

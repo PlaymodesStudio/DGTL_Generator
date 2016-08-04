@@ -34,11 +34,11 @@ class ofApp : public ofBaseApp{
     
     vector<float> infoVec;
     ofFbo pixelContent;
-    phasorClass phasor;
+    
     
     ofxSyphonServer syphonServer;
     
-    
+    phasorClass phasor;
     elementOscilator singleGenerator;
     delayControl     delayControler;
     

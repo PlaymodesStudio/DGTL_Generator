@@ -41,6 +41,8 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    paramsControl.update();
+    
     //Phasor updates automatically at audio rate
     
     //Calculation of the oscilators for each element, with phasor info

@@ -9,8 +9,6 @@
 #include "parametersControl.h"
 
 void parametersControl::setup(){
-    
-    
     //DatGui
     datGui = new ofxDatGui();
     datGui->addHeader();
@@ -53,10 +51,55 @@ void parametersControl::setup(){
     datGui->addToggle("Invert ")->setChecked(false);
     datGui->addSlider(delayParams.getInt("Symmetry"));
     datGui->addSlider(delayParams.getFloat("Combination"));
-//
+
+    //Gui Events
     datGui->onButtonEvent(this, &parametersControl::onGuiButtonEvent);
     datGui->onToggleEvent(this, &parametersControl::onGuiToggleEvent);
     datGui->onDropdownEvent(this, &parametersControl::onGuiDropdownEvent);
+    
+    
+    //OSC
+    oscReceiver.setup(12345);
+    
+}
+
+
+void parametersControl::update(){
+    while(oscReceiver.hasWaitingMessages()){
+        ofxOscMessage m;
+        oscReceiver.getNextMessage(m);
+        
+        vector<string> splitAddress = ofSplitString(m.getAddress(), "/");
+        if(splitAddress[1] == "phasor"){
+            ofAbstractParameter &absParam = phasorParams.get(splitAddress[2]);
+            if(absParam.type() == typeid(ofParameter<float>).name())
+                phasorParams.getFloat(splitAddress[2]) = m.getArgAsFloat(0);
+            else if(absParam.type() == typeid(ofParameter<int>).name())
+                phasorParams.getInt(splitAddress[2]) = m.getArgAsInt(0);
+            else if(absParam.type() == typeid(ofParameter<bool>).name())
+                phasorParams.getBool(splitAddress[2]) = m.getArgAsBool(0);
+        }
+        else if(splitAddress[1] == "delay"){
+            ofAbstractParameter &absParam = delayParams.get(splitAddress[2]);
+            if(absParam.type() == typeid(ofParameter<float>).name())
+                delayParams.getFloat(splitAddress[2]) = m.getArgAsFloat(0);
+            else if(absParam.type() == typeid(ofParameter<int>).name())
+                delayParams.getInt(splitAddress[2]) = m.getArgAsInt(0);
+            else if(absParam.type() == typeid(ofParameter<bool>).name())
+                delayParams.getBool(splitAddress[2]) = m.getArgAsBool(0);
+        }
+        else if(splitAddress[1] == "oscillator"){
+            ofAbstractParameter &absParam = oscilatorParams.get(splitAddress[2]);
+            if(absParam.type() == typeid(ofParameter<float>).name())
+                oscilatorParams.getFloat(splitAddress[2]) = m.getArgAsFloat(0);
+            if(absParam.type() == typeid(ofParameter<int>).name())
+                oscilatorParams.getInt(splitAddress[2]) = m.getArgAsInt(0);
+            if(absParam.type() == typeid(ofParameter<bool>).name())
+                oscilatorParams.getBool(splitAddress[2]) = m.getArgAsBool(0);
+        }
+        
+    }
+
 }
 
 

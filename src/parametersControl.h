@@ -24,6 +24,7 @@ public:
     void bindDelayParams(ofParameterGroup paramGroup){delayParams = paramGroup;};
     
     void setup();
+    void update();
     
     void onGuiButtonEvent(ofxDatGuiButtonEvent e);
     void onGuiToggleEvent(ofxDatGuiToggleEvent e);
@@ -36,6 +37,8 @@ private:
     ofParameterGroup delayParams;
     
     ofxDatGui *datGui;
+    
+    ofxOscReceiver oscReceiver;
 };
 
 
