@@ -25,6 +25,8 @@ void parametersControl::setup(){
     datGui->addButton("Reset Phase");
     datGui->addToggle("Loop")->setEnabled(true);
     
+    cout<<phasorParams.size()<<endl;
+    
     //OSCILATOR
     datGui->addBreak();
     datGui->addLabel("Oscilator");
@@ -63,6 +65,8 @@ void parametersControl::setup(){
     
     //add listerners for midi sending when parameter is changed
     ofAddListener(phasorParams.parameterChangedE(), this, &parametersControl::listenerFunction);
+    ofAddListener(oscilatorParams.parameterChangedE(), this, &parametersControl::listenerFunction);
+    ofAddListener(delayParams.parameterChangedE(), this, &parametersControl::listenerFunction);
     
     //OSC
     oscReceiver.setup(12345);
@@ -136,16 +140,29 @@ void parametersControl::listenerFunction(ofAbstractParameter& e){
         ofParameter<float> castedParam = e.cast<float>();
         normalizedVal = ofMap(castedParam, castedParam.getMin(), castedParam.getMax(), 0, 127);
         position = castedParam.getFirstParent().getPosition(e.getName());
+        if(castedParam.getFirstParent().getName() == "oscillator")
+            position += phasorParams.size();
+        else if(castedParam.getFirstParent().getName() == "delay")
+            position += phasorParams.size() + oscilatorParams.size();
     }
     else if(e.type() == typeid(ofParameter<int>).name()){
         ofParameter<int> castedParam = e.cast<int>();
         normalizedVal = ofMap(castedParam, castedParam.getMin(), castedParam.getMax(), 0, 127);
         position = castedParam.getFirstParent().getPosition(e.getName());
+        if(castedParam.getFirstParent().getName() == "oscillator")
+            position += phasorParams.size();
+        else if(castedParam.getFirstParent().getName() == "delay")
+            position += phasorParams.size() + oscilatorParams.size();
     }
     else if(e.type() == typeid(ofParameter<bool>).name()){
         ofParameter<bool> castedParam = e.cast<bool>();
         normalizedVal = castedParam ? 127 : 0;
         position = castedParam.getFirstParent().getPosition(e.getName());
+        if(castedParam.getFirstParent().getName() == "oscillator")
+            position += phasorParams.size();
+        else if(castedParam.getFirstParent().getName() == "delay")
+            position += phasorParams.size() + oscilatorParams.size();
     }
+    
     cout<<"Para Change: "<< e.getName() << " |pos: " << position << " |val: " << e  << " |MIDI: " << normalizedVal << endl;
 }

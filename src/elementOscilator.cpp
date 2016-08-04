@@ -17,6 +17,7 @@ elementOscilator::elementOscilator(){
 }
 
 void elementOscilator::setup(){
+    parameters.setName("oscillator");
     parameters.add(freq_Param.set("n Waves", 1, 0, indexCount_Param));
     parameters.add(phaseOffset_Param.set("Phase offset", 0, 0, 1));
     parameters.add(invert_Param.set("Invert", false));

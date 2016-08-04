@@ -9,6 +9,7 @@
 #include "delayControl.h"
 
 void delayControl::setup(){
+    parameters.setName("delay");
     parameters.add(delay_frames.set("Delay", 1, 0, 40));
     parameters.add(invert_Param.set("Invert", false));
     parameters.add(symmetry_Param.set("Symmetry", 0, 0, 10));
