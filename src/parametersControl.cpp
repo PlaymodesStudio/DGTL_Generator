@@ -53,7 +53,7 @@ void parametersControl::setup(){
     datGui->addBreak();
     datGui->addLabel("Delay");
     datGui->addSlider(delayParams.getInt("Delay"));
-    datGui->addToggle("Invert ")->setChecked(false);
+    datGui->addToggle("Invert Delay")->setChecked(false);
     datGui->addSlider(delayParams.getInt("Symmetry"));
     datGui->addSlider(delayParams.getFloat("Combination"));
 
@@ -250,8 +250,8 @@ void parametersControl::onGuiToggleEvent(ofxDatGuiToggleEvent e){
         phasorParams.getBool("Loop") = e.target->getChecked();
     if(e.target->getName() == "Invert")
         oscilatorParams.getBool("Invert") = e.target->getChecked();
-    if(e.target->getName() == "Invert ")
-        delayParams.getBool("Invert") = e.target->getChecked();
+    if(e.target->getName() == "Invert Delay")
+        delayParams.getBool("Invert Delay") = e.target->getChecked();
     if(e.target->getName() == "Bounce")
         phasorParams.getBool("Bounce") = e.target->getChecked();
 }
@@ -304,6 +304,9 @@ void parametersControl::listenerFunction(ofAbstractParameter& e){
             position += phasorParams.size();
         else if(castedParam.getFirstParent().getName() == "delay")
             position += phasorParams.size() + oscilatorParams.size();
+        
+        //Update to datGui
+        datGui->getToggle(castedParam.getName())->setChecked(normalizedVal);
     }
     
     midiOut.sendControlChange(1, position, normalizedVal);
@@ -340,21 +343,21 @@ void parametersControl::newMidiMessage(ofxMidiMessage &eventArgs){
         ofParameter<float> castedParam = absParam.cast<float>();
         
         //get the value of that parameter and map it
-        castedParam = (ofMap(parameterVal, 0, 127, castedParam.getMin(), castedParam.getMax()));
+        castedParam = (ofMap(parameterVal, 0, 127, castedParam.getMin(), castedParam.getMax(), true));
     }
     if(absParam.type() == typeid(ofParameter<int>).name()){
         ofParameter<int> castedParam = absParam.cast<int>();
         int range = castedParam.getMax()-castedParam.getMin();
         if(range < 128)
-            castedParam = ofMap(parameterVal, 0, ((int)(128/(range))*range), castedParam.getMin(), castedParam.getMax());
+            castedParam = ofMap(parameterVal, 0, ((int)(128/(range))*range), castedParam.getMin(), castedParam.getMax(), true);
         else
-            castedParam = ofMap(parameterVal, 0, range/ceil((float)range/(float)128), castedParam.getMin(), castedParam.getMax());
+            castedParam = ofMap(parameterVal, 0, range/ceil((float)range/(float)128), castedParam.getMin(), castedParam.getMax(), true);
         
     }
     if(absParam.type() == typeid(ofParameter<bool>).name()){
         ofParameter<bool> castedParam = absParam.cast<bool>();
        
         //get the value of that parameter and map it
-        castedParam = (ofMap(parameterVal, 0, 127, castedParam.getMin(), castedParam.getMax()));
+        castedParam.set(parameterVal >= 64 ? true : false);
     }
 }

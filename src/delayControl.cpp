@@ -11,7 +11,7 @@
 void delayControl::setup(){
     parameters.setName("delay");
     parameters.add(delay_frames.set("Delay", 1, 0, 40));
-    parameters.add(invert_Param.set("Invert", false));
+    parameters.add(invert_Param.set("Invert Delay", false));
     parameters.add(symmetry_Param.set("Symmetry", 0, 0, 10));
     parameters.add(comb_Param.set("Combination", 0, 0, 1));
 }
