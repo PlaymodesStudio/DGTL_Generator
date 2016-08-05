@@ -36,8 +36,8 @@ private:
     ofParameter<float>  initPhase_Param;
     ofParameter<int>    quant_Param;
     ofParameter<bool>   loop_Param;
+    ofParameter<bool>   bounce_Param;
     ofParameter<bool>   resetPhase_Param;
-    
     
     ofSoundStream soundStream;
 };

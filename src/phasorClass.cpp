@@ -11,7 +11,7 @@
 
 phasorClass::phasorClass()
 {
-    loop_Param = true;
+
 }
 
 void phasorClass::setup(){
@@ -27,6 +27,7 @@ void phasorClass::setup(){
     parameters.add(initPhase_Param.set("Initial phase", 0, 0, 1));
     parameters.add(resetPhase_Param.set("Reset Phase", false));
     parameters.add(loop_Param.set("Loop", true));
+    parameters.add(bounce_Param.set("Bounce", false));
     
     resetPhase_Param.addListener(this, &phasorClass::resetPhasor);
 }
@@ -37,7 +38,7 @@ float phasorClass::getPhasor(){
 }
 
 void phasorClass::resetPhasor(bool &reset){
-    phasor = initPhase_Param;
+    phasor = 0;
     resetPhase_Param = false;
 }
 
@@ -47,13 +48,23 @@ void phasorClass::audioIn(float * input, int bufferSize, int nChannels){
     freq = freq * (float)beatsMult_Param;
     freq = (float)freq / (float)beatsDiv_Param;
     
-    if ( phasor < 1)
-        phasor += (1.0f/(float)(((float)44100/(float)512)/(float)freq));
+    float increment = (1.0f/(float)(((float)44100/(float)512)/(float)freq));
     
-    if ( phasor >= 1.0 && loop_Param) phasor -= 1.0;
+    if ( phasor < 1)
+        phasor = bounce_Param ? phasor + increment/2 : phasor + increment;
+    else if ( phasor >= 1.0 && loop_Param) phasor -= 1.0;
+    
+    phasorMod = phasor;
+    
+    if(bounce_Param)
+        phasorMod = 1-(fabs((phasor * (-2))+ 1));
+    
+    phasorMod += initPhase_Param;
+    if(phasorMod >= 1.0)
+        phasorMod -= 1.0;
     
     //Assign a copy of the phasor to make some modifications
-    phasorMod = phasor;
+    
     
     //Quantization
     if(quant_Param != 40){

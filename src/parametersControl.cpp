@@ -23,9 +23,9 @@ void parametersControl::setup(){
     datGui->addSlider(phasorParams.getInt("Quantization"));
     datGui->addSlider(phasorParams.getFloat("Initial phase"))->setPrecision(2);
     datGui->addButton("Reset Phase");
-    datGui->addToggle("Loop")->setEnabled(true);
+    datGui->addToggle("Loop")->setChecked(true);
+    datGui->addToggle("Bounce")->setChecked(false);
     
-    cout<<phasorParams.size()<<endl;
     
     //OSCILATOR
     datGui->addBreak();
@@ -252,6 +252,8 @@ void parametersControl::onGuiToggleEvent(ofxDatGuiToggleEvent e){
         oscilatorParams.getBool("Invert") = e.target->getChecked();
     if(e.target->getName() == "Invert ")
         delayParams.getBool("Invert") = e.target->getChecked();
+    if(e.target->getName() == "Bounce")
+        phasorParams.getBool("Bounce") = e.target->getChecked();
 }
 
 void parametersControl::onGuiDropdownEvent(ofxDatGuiDropdownEvent e){
@@ -306,7 +308,7 @@ void parametersControl::listenerFunction(ofAbstractParameter& e){
     
     midiOut.sendControlChange(1, position, normalizedVal);
     
-    cout<<"Para Change: "<< e.getName() << " |pos: " << position << " |val: " << e  << " |MIDI: " << normalizedVal << endl;
+    //cout<<"Para Change: "<< e.getName() << " |pos: " << position << " |val: " << e  << " |MIDI: " << normalizedVal << endl;
 }
 
 void parametersControl::newMidiMessage(ofxMidiMessage &eventArgs){
