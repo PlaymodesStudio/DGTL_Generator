@@ -12,6 +12,7 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "ofxDatGui.h"
+#include "ofxMidi.h"
 
 class parametersControl{
 public:
@@ -48,6 +49,8 @@ private:
     ofxOscReceiver oscReceiver;
     
     ofXml xml;
+    
+    ofxMidiOut midiOut;
 };
 
 

@@ -1,4 +1,4 @@
 ofxDatGui_PM
-ofxGui
+ofxMidi
 ofxOsc
 ofxSyphon

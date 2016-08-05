@@ -78,6 +78,12 @@ void parametersControl::setup(){
     presetMatrix->setOpacity(.75);
     
     presetMatrix->onMatrixEvent(this, &parametersControl::onGuiMatrixEvent);
+    
+    
+    
+    //MIDI
+    ofxMidiOut::listPorts();
+    midiOut.openPort("BCF2000");
 }
 
 
@@ -290,6 +296,8 @@ void parametersControl::listenerFunction(ofAbstractParameter& e){
         else if(castedParam.getFirstParent().getName() == "delay")
             position += phasorParams.size() + oscilatorParams.size();
     }
+    
+    midiOut.sendControlChange(1, position, normalizedVal);
     
     cout<<"Para Change: "<< e.getName() << " |pos: " << position << " |val: " << e  << " |MIDI: " << normalizedVal << endl;
 }
