@@ -83,7 +83,7 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
         
         //invert it?
         //k *= invert_Param;
-        k *=  freq_Param; //Index Modifiers
+        k *=  freq_Param * indexQuant_Param; //Index Modifiers
         
         
         float linPhase = fmod(w+k, 2*PI) / (2*PI);
