@@ -72,8 +72,9 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
         //COMB
         index = abs(((index%2)*indexCount_Param*comb_Param)-index);
         
-        //modeulsafidosia
-        index %= modulo_Param;
+        //Modulo
+        if(modulo_Param != modulo_Param.getMax())
+            index %= modulo_Param;
         
         
         float k = (((float)index/(float)indexCount_Param) + phaseOffset_Param) * 2 * PI;
