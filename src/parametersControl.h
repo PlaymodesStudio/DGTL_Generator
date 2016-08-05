@@ -29,6 +29,7 @@ public:
     void onGuiButtonEvent(ofxDatGuiButtonEvent e);
     void onGuiToggleEvent(ofxDatGuiToggleEvent e);
     void onGuiDropdownEvent(ofxDatGuiDropdownEvent e);
+    void onGuiMatrixEvent(ofxDatGuiMatrixEvent e);
     
     void listenerFunction(ofAbstractParameter& e);
     
@@ -42,6 +43,7 @@ private:
     ofParameterGroup delayParams;
     
     ofxDatGui *datGui;
+    ofxDatGuiMatrix* presetMatrix;
     
     ofxOscReceiver oscReceiver;
     

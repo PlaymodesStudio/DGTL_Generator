@@ -71,8 +71,13 @@ void parametersControl::setup(){
     //OSC
     oscReceiver.setup(12345);
     
-    loadPreset(2);
+    loadPreset(1);
     
+    presetMatrix = datGui->addMatrix("Presets", 24, true);
+    presetMatrix->setRadioMode(true);
+    presetMatrix->setOpacity(.75);
+    
+    presetMatrix->onMatrixEvent(this, &parametersControl::onGuiMatrixEvent);
 }
 
 
@@ -243,6 +248,13 @@ void parametersControl::onGuiToggleEvent(ofxDatGuiToggleEvent e){
 void parametersControl::onGuiDropdownEvent(ofxDatGuiDropdownEvent e){
     if(e.target->getName() == "Wave Select")
         oscilatorParams.getInt("Wave Select") = (e.child);
+}
+
+void parametersControl::onGuiMatrixEvent(ofxDatGuiMatrixEvent e){
+    if(ofGetKeyPressed(OF_KEY_SHIFT))
+        savePreset(e.child+1);
+    else
+        loadPreset(e.child+1);
 }
 
 
