@@ -32,6 +32,9 @@ public:
     
     void listenerFunction(ofAbstractParameter& e);
     
+    void savePreset(int presetNum);
+    void loadPreset(int presetNum);
+    
 private:
     
     ofParameterGroup phasorParams;
@@ -41,6 +44,8 @@ private:
     ofxDatGui *datGui;
     
     ofxOscReceiver oscReceiver;
+    
+    ofXml xml;
 };
 
 

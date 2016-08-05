@@ -71,6 +71,8 @@ void parametersControl::setup(){
     //OSC
     oscReceiver.setup(12345);
     
+    savePreset(1);
+    
 }
 
 
@@ -110,6 +112,53 @@ void parametersControl::update(){
     }
 }
 
+
+void parametersControl::savePreset(int presetNum){
+    //xml.load("Preset_"+ofToString(presetNum)+".xml");
+    xml.clear();
+    
+    //Root Element
+    xml.addChild("PRESET");
+    
+    // now we set our current element so we're on the right
+    // element, so when add new nodes, they are still inside
+    //the root element
+    xml.setTo("PRESET");
+    
+    for (int i = 0; i < 3 ; i++){
+        ofParameterGroup groupParam;
+        switch (i){
+            case 0: groupParam = phasorParams; break;
+            case 1: groupParam = oscilatorParams; break;
+            case 2: groupParam = delayParams; break;
+        }
+        xml.addChild(groupParam.getName());
+        xml.setTo(groupParam.getName());
+        
+        for (int j = 0; j < groupParam.size() ; j++){
+            ofAbstractParameter &absParam = groupParam.get(j);
+            if(absParam.type() == typeid(ofParameter<float>).name()){
+                ofParameter<float> castedParam = absParam.cast<float>();
+                xml.addValue(castedParam.getName(), castedParam.get());
+            }
+            if(absParam.type() == typeid(ofParameter<int>).name()){
+                ofParameter<int> castedParam = absParam.cast<int>();
+                xml.addValue(castedParam.getName(), castedParam.get());
+            }
+            if(absParam.type() == typeid(ofParameter<bool>).name()){
+                ofParameter<bool> castedParam = absParam.cast<bool>();
+                xml.addValue(castedParam.getName(), castedParam.get());
+            }
+        }
+        xml.setToParent();
+    }
+    
+    xml.save("Preset_"+ofToString(presetNum)+".xml");
+}
+
+void parametersControl::loadPreset(int presetNum){
+    
+}
 
 void parametersControl::onGuiButtonEvent(ofxDatGuiButtonEvent e){
         if(e.target->getName() == "Reset Phase")
