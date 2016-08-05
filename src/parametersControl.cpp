@@ -84,6 +84,8 @@ void parametersControl::setup(){
     //MIDI
     ofxMidiOut::listPorts();
     midiOut.openPort("BCF2000");
+    midiIn.openPort("BCF2000");
+    midiIn.addListener(this);
 }
 
 
@@ -300,4 +302,49 @@ void parametersControl::listenerFunction(ofAbstractParameter& e){
     midiOut.sendControlChange(1, position, normalizedVal);
     
     cout<<"Para Change: "<< e.getName() << " |pos: " << position << " |val: " << e  << " |MIDI: " << normalizedVal << endl;
+}
+
+void parametersControl::newMidiMessage(ofxMidiMessage &eventArgs){
+    int parameterNum = eventArgs.control;
+    int parameterVal = eventArgs.value;
+    
+        //get the grup in each iteration
+        ofParameterGroup groupParam;
+    if(parameterNum > phasorParams.size()-1){
+        if(parameterNum > (phasorParams.size() + oscilatorParams.size() -1 )){
+            if(parameterNum > (phasorParams.size() + oscilatorParams.size() + delayParams.size() -1))
+                return;
+            parameterNum -= (phasorParams.size() + oscilatorParams.size());
+            groupParam = delayParams;
+        }
+        else{
+            parameterNum -= phasorParams.size();
+            groupParam = oscilatorParams;
+        }
+    }
+    else{
+        groupParam = phasorParams;
+    }
+    
+    //Iterate for all parameters in parametergroup and look for the type of the parameter
+    ofAbstractParameter &absParam = groupParam.get(parameterNum);
+    if(absParam.type() == typeid(ofParameter<float>).name()){
+        //Cast it
+        ofParameter<float> castedParam = absParam.cast<float>();
+        
+        //get the value of that parameter and map it
+        castedParam = (ofMap(parameterVal, 0, 127, castedParam.getMin(), castedParam.getMax()));
+    }
+    if(absParam.type() == typeid(ofParameter<int>).name()){
+        ofParameter<int> castedParam = absParam.cast<int>();
+        
+        //get the value of that parameter and map it
+        castedParam.set(ofMap(parameterVal, 0, 127, castedParam.getMin(), castedParam.getMax()));
+    }
+    if(absParam.type() == typeid(ofParameter<bool>).name()){
+        ofParameter<bool> castedParam = absParam.cast<bool>();
+       
+        //get the value of that parameter and map it
+        castedParam.set(ofMap(parameterVal, 0, 127, castedParam.getMin(), castedParam.getMax()));
+    }
 }

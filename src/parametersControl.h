@@ -14,7 +14,7 @@
 #include "ofxDatGui.h"
 #include "ofxMidi.h"
 
-class parametersControl{
+class parametersControl: public ofxMidiListener{
 public:
     
     parametersControl(){};
@@ -34,6 +34,8 @@ public:
     
     void listenerFunction(ofAbstractParameter& e);
     
+    void newMidiMessage(ofxMidiMessage& eventArgs);
+    
     void savePreset(int presetNum);
     void loadPreset(int presetNum);
     
@@ -51,6 +53,7 @@ private:
     ofXml xml;
     
     ofxMidiOut midiOut;
+    ofxMidiIn   midiIn;
 };
 
 
