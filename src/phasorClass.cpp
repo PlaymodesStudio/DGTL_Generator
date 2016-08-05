@@ -50,23 +50,28 @@ void phasorClass::audioIn(float * input, int bufferSize, int nChannels){
     
     float increment = (1.0f/(float)(((float)44100/(float)512)/(float)freq));
     
+    // We want to use half speed with bounce param,
+    // becouse we will make a triangle wave and it
+    // will go and return with the same period
+    // it we don't change it
     if ( phasor < 1)
         phasor = bounce_Param ? phasor + increment/2 : phasor + increment;
     else if ( phasor >= 1.0 && loop_Param) phasor -= 1.0;
     
+    //Assign a copy of the phasor to make some modifications
     phasorMod = phasor;
     
+    //We make a triangle Wave
     if(bounce_Param)
         phasorMod = 1-(fabs((phasor * (-2))+ 1));
     
+    //take the initPhase_Param as a phase offset param
     phasorMod += initPhase_Param;
     if(phasorMod >= 1.0)
         phasorMod -= 1.0;
     
-    //Assign a copy of the phasor to make some modifications
     
-    
-    //Quantization
+    //Quantization -- only get the values we are interested
     if(quant_Param != 40){
         phasorMod = (int)(phasorMod*quant_Param);
         phasorMod /= quant_Param;
