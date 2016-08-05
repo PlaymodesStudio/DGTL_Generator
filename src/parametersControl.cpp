@@ -71,7 +71,7 @@ void parametersControl::setup(){
     //OSC
     oscReceiver.setup(12345);
     
-    savePreset(1);
+    loadPreset(2);
     
 }
 
@@ -125,29 +125,46 @@ void parametersControl::savePreset(int presetNum){
     //the root element
     xml.setTo("PRESET");
     
+    //Iterate for all the three parameterGroups
     for (int i = 0; i < 3 ; i++){
+        
+        //get the grup in each iteration
         ofParameterGroup groupParam;
         switch (i){
             case 0: groupParam = phasorParams; break;
             case 1: groupParam = oscilatorParams; break;
             case 2: groupParam = delayParams; break;
         }
+        
+        //set XML structure to parameterGroup
         xml.addChild(groupParam.getName());
         xml.setTo(groupParam.getName());
         
+        //Iterate for all parameters in parametergroup and look for the type of the parameter
         for (int j = 0; j < groupParam.size() ; j++){
             ofAbstractParameter &absParam = groupParam.get(j);
             if(absParam.type() == typeid(ofParameter<float>).name()){
+                //Cast it
                 ofParameter<float> castedParam = absParam.cast<float>();
-                xml.addValue(castedParam.getName(), castedParam.get());
+                
+                //Replace blank spaces with underscore
+                string noSpaces = castedParam.getName();
+                ofStringReplace(noSpaces, " ", "_");
+                
+                //add the value of that parameter into xml
+                xml.addValue(noSpaces, castedParam.get());
             }
             if(absParam.type() == typeid(ofParameter<int>).name()){
                 ofParameter<int> castedParam = absParam.cast<int>();
-                xml.addValue(castedParam.getName(), castedParam.get());
+                string noSpaces = castedParam.getName();
+                ofStringReplace(noSpaces, " ", "_");
+                xml.addValue(noSpaces, castedParam.get());
             }
             if(absParam.type() == typeid(ofParameter<bool>).name()){
                 ofParameter<bool> castedParam = absParam.cast<bool>();
-                xml.addValue(castedParam.getName(), castedParam.get());
+                string noSpaces = castedParam.getName();
+                ofStringReplace(noSpaces, " ", "_");
+                xml.addValue(noSpaces, castedParam.get());
             }
         }
         xml.setToParent();
@@ -157,7 +174,56 @@ void parametersControl::savePreset(int presetNum){
 }
 
 void parametersControl::loadPreset(int presetNum){
+    //Test if there is no problem with the file
+    if(!xml.load("Preset_"+ofToString(presetNum)+".xml"))
+        return;
     
+    //Iterate for all the three parameterGroups
+    for (int i = 0; i < 3 ; i++){
+        
+        //get the grup in each iteration
+        ofParameterGroup groupParam;
+        switch (i){
+            case 0: groupParam = phasorParams; break;
+            case 1: groupParam = oscilatorParams; break;
+            case 2: groupParam = delayParams; break;
+        }
+        
+        //Put xml in the place of the parametergroup
+        if(xml.exists(groupParam.getName())){
+            xml.setTo(groupParam.getName());
+            
+            //Iterate for all parameters in parametergroup and look for the type of the parameter
+            for (int j = 0; j < groupParam.size() ; j++){
+                ofAbstractParameter &absParam = groupParam.get(j);
+                if(absParam.type() == typeid(ofParameter<float>).name()){
+                    //Cast it
+                    ofParameter<float> castedParam = absParam.cast<float>();
+                    
+                    //Replace blank spaces with underscore
+                    string noSpaces = castedParam.getName();
+                    ofStringReplace(noSpaces, " ", "_");
+                    
+                    //get the value of that parameter
+                    castedParam = xml.getValue(noSpaces, castedParam.get());
+                }
+                if(absParam.type() == typeid(ofParameter<int>).name()){
+                    ofParameter<int> castedParam = absParam.cast<int>();
+                    string noSpaces = castedParam.getName();
+                    ofStringReplace(noSpaces, " ", "_");
+                    castedParam = xml.getValue(noSpaces, castedParam.get());
+                }
+                if(absParam.type() == typeid(ofParameter<bool>).name()){
+                    ofParameter<bool> castedParam = absParam.cast<bool>();
+                    string noSpaces = castedParam.getName();
+                    ofStringReplace(noSpaces, " ", "_");
+                    castedParam = xml.getValue(noSpaces, castedParam.get());
+                }
+            }
+            //Jump one label before in xml structure
+            xml.setToParent();
+        }
+    }
 }
 
 void parametersControl::onGuiButtonEvent(ofxDatGuiButtonEvent e){
