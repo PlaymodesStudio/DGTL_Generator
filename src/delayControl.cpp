@@ -23,6 +23,8 @@ int delayControl::computeFunc(int index){
     int veusSym = indexCount_Param/(symmetry_Param+1);
     index = veusSym-abs((((int)(index/veusSym)%2) * veusSym)-(index%veusSym));
     
+    index += symmetry_Param;
+    
     //INVERSE
     //Fisrt we invert the index to simulate the wave goes from left to right, inverting indexes, if we want to invertit we don't do this calc
     if(!invert_Param)
