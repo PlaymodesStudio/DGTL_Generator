@@ -44,7 +44,7 @@ int delayControl::computeFunc(int index){
 void delayControl::applyDelayToTexture(ofFbo &fbo, vector<float> infoVec){
     
     //Fill the buffer with the new info of the current frame
-    infoVecBuffer.push_back(infoVec);
+    infoVecBuffer.push_front(infoVec);
     
     //Use the fbo to paint on it
     fbo.begin();
@@ -56,7 +56,7 @@ void delayControl::applyDelayToTexture(ofFbo &fbo, vector<float> infoVec){
         int delayIndex = delay_frames*(computeFunc(j));
         
         //If we want to acces a position that is not existing, get the last position
-        while(infoVecBuffer.size() <= delayIndex) delayIndex--;
+        if(infoVecBuffer.size() <= delayIndex) delayIndex = 0;
         
         //Paint the square for each column
         for (int i = 0; i < fbo.getWidth() ; i++){
@@ -69,5 +69,5 @@ void delayControl::applyDelayToTexture(ofFbo &fbo, vector<float> infoVec){
     
     //If we have values that we will not use anymore, they are too far away, remove them
     while(infoVecBuffer.size() > delay_frames*fbo.getHeight())
-        infoVecBuffer.pop_front();
+        infoVecBuffer.pop_back();
 }
