@@ -218,8 +218,9 @@ void parametersControl::loadPreset(int presetNum){
                     string noSpaces = castedParam.getName();
                     ofStringReplace(noSpaces, " ", "_");
                     
-                    //get the value of that parameter
-                    castedParam = xml.getValue(noSpaces, castedParam.get());
+                    //get the value of that parameter if it's not bpm, we don't want to lose sync
+                    if(castedParam.getName() != "BPM")
+                        castedParam = xml.getValue(noSpaces, castedParam.get());
                 }
                 if(absParam.type() == typeid(ofParameter<int>).name()){
                     ofParameter<int> castedParam = absParam.cast<int>();
@@ -295,6 +296,8 @@ void parametersControl::listenerFunction(ofAbstractParameter& e){
             position += phasorParams.size();
         else if(castedParam.getFirstParent().getName() == "delay")
             position += phasorParams.size() + oscilatorParams.size();
+        
+        if(castedParam.getName() == "Wave Select") datGui->getDropdown("Wave Select")->select(castedParam);
     }
     else if(e.type() == typeid(ofParameter<bool>).name()){
         ofParameter<bool> castedParam = e.cast<bool>();

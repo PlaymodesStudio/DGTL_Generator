@@ -22,14 +22,14 @@ void elementOscilator::setup(){
     parameters.add(phaseOffset_Param.set("Phase offset", 0, 0, 1));
     parameters.add(invert_Param.set("Invert", false));
     parameters.add(symmetry_Param.set("Symmetry", 0, 0, 10));
-    parameters.add(indexOffset_Param.set("Index Offset", 0, -indexCount_Param, indexCount_Param));
+    parameters.add(indexOffset_Param.set("Index Offset", 0, -indexCount_Param/2, indexCount_Param/2));
     parameters.add(indexQuant_Param.set("Index Quantization", 1, 1, indexCount_Param));
     parameters.add(comb_Param.set("Combination", 0, 0, 1));
     parameters.add(modulo_Param.set("Modulo", indexCount_Param, 1, indexCount_Param));
-    parameters.add(randomAdd_Param.set("Random addition", 0, -1, 1));
+    parameters.add(randomAdd_Param.set("Random addition", 0, -.5, .5));
     parameters.add(quant_Param.set("Quantization", 0, 0, 1));
-    parameters.add(scale_Param.set("Scale", 1, 0, 2));
-    parameters.add(offset_Param.set("Offset", 0, -1, 1));
+    parameters.add(scale_Param.set("Scale", 1, .5, 1.5));
+    parameters.add(offset_Param.set("Offset", 0, -.5, .5));
     parameters.add(pow_Param.set("Pow", 1, -40, 40));
     parameters.add(pwm_Param.set("Square PWM", 0.5, 0, 1));
     parameters.add(waveSelect_Param.set("Wave Select", 0, 0, 7));
