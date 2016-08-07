@@ -53,6 +53,9 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
         
         index = odd ? index-indexOffset_Param : index+indexOffset_Param;
         
+        if(indexCount_Param % 2 == 0)
+            index += odd ? 1 : 0;
+        
         //    index += indexOffset_Param;
         //    index %= indexCount_Param;
         
