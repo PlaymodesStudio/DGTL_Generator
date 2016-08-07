@@ -67,7 +67,7 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
         
         //INVERSE
         //Fisrt we invert the index to simulate the wave goes from left to right, inverting indexes, if we want to invertit we don't do this calc
-        if(!invert_Param)
+        if(invert_Param)
             index = ((float)indexCount_Param-(float)index);
         
         
