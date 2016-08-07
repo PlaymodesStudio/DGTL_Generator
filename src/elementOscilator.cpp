@@ -47,19 +47,17 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
         bool odd = false;
         if((int)((index)/(indexCount_Param/(symmetry_Param+1)))%2 == 1 ) odd = true;
         
+        index += indexOffset_Param;
+        
         //SYMMETRY santi
         int veusSym = indexCount_Param/(symmetry_Param+1);
         index = veusSym-abs((((int)(index/veusSym)%2) * veusSym)-(index%veusSym));
         
-        index = odd ? index-indexOffset_Param : index+indexOffset_Param;
+//        index = odd ? index-indexOffset_Param : index+indexOffset_Param;
         
         if(indexCount_Param % 2 == 0)
             index += odd ? 1 : 0;
-        
-        //    index += indexOffset_Param;
-        //    index %= indexCount_Param;
-        
-        
+
         
         //INVERSE
         //Fisrt we invert the index to simulate the wave goes from left to right, inverting indexes, if we want to invertit we don't do this calc
