@@ -33,10 +33,11 @@ void elementOscilator::setup(){
     parameters.add(pow_Param.set("Pow", 1, -40, 40));
     parameters.add(pwm_Param.set("Square PWM", 0.5, 0, 1));
     parameters.add(waveSelect_Param.set("Wave Select", 0, 0, 7));
+    
+    infoVec_preMod.resize(indexCount_Param);
 }
 
 void elementOscilator::computeFunc(float *infoVec, float phasor){
-    
     for (int i = 0; i < indexCount_Param ; i++){
         
         int index = i;
@@ -44,18 +45,23 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
         //get phasor to be w (radial freq)
         float w = (phasor*2*PI);// + (phaseOffset_Param*2*PI);
         
+        //QUANTIZE
+        index = ceil(index/indexQuant_Param);
+        
+        int newNumOfPixels = indexCount_Param/indexQuant_Param;
+        
         bool odd = false;
-        if((int)((index)/(indexCount_Param/(symmetry_Param+1)))%2 == 1 ) odd = true;
+        if((int)((index)/(newNumOfPixels/(symmetry_Param+1)))%2 == 1 ) odd = true;
         
         index += indexOffset_Param;
         
         //SYMMETRY santi
-        int veusSym = indexCount_Param/(symmetry_Param+1);
+        int veusSym = newNumOfPixels/(symmetry_Param+1);
         index = veusSym-abs((((int)(index/veusSym)%2) * veusSym)-(index%veusSym));
         
 //        index = odd ? index-indexOffset_Param : index+indexOffset_Param;
         
-        if(indexCount_Param % 2 == 0)
+        if(newNumOfPixels % 2 == 0)
             index += odd ? 1 : 0;
 
         
@@ -65,8 +71,7 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
             index = ((float)indexCount_Param-(float)index);
         
         
-        //QUANTIZE
-        index = ceil(index/indexQuant_Param);
+        
         
         //cout<<index<<"-" ;
         
@@ -129,10 +134,10 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
                     if(index != prevIndex)
                         val = ofRandom(1);
                     else
-                        val = infoVec[i-1];
+                        val = infoVec_preMod[i-1];
                 }
                 else
-                    val = infoVec[i];
+                    val = infoVec_preMod[i];
                 
                 break;
             }
@@ -147,7 +152,7 @@ void elementOscilator::computeFunc(float *infoVec, float phasor){
         }
         
         
-        
+        infoVec_preMod[i] = val;
         computeMultiplyMod(&val);
         if(i == indexCount_Param-1)
             oldPhasor = phasor;
@@ -175,9 +180,13 @@ void elementOscilator::computeMultiplyMod(float *value){
     if(pow_Param)
         *value = (pow_Param < 0) ? pow(*value, 1/(float)(-pow_Param)) : pow(*value, pow_Param);
     
+    *value = ofClamp(*value, 0, 1);
+    
     //Quantization
     if(quant_Param)
-        *value = quant_Param*floor(*value/quant_Param);
+        *value = quant_Param*round(*value/quant_Param);
+    
+    *value = ofClamp(*value, 0, 1);
     
 }
 

@@ -57,6 +57,8 @@ private:
     ofParameter<float>  randomAdd_Param;
     ofParameter<int>    waveSelect_Param;
     
+    vector<float> infoVec_preMod;
+    
     float               oldPhasor;
     int                 prevIndex;
 };
