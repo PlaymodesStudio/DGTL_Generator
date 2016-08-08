@@ -81,7 +81,8 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    paramsControl.loadPreset(key-48);
+    if(isdigit(key))
+        paramsControl.loadPreset(key-48);
 }
 
 //--------------------------------------------------------------
