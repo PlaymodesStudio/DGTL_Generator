@@ -32,9 +32,10 @@ public:
     void computeFunc(float *infoVec, float phasor);
     void computeMultiplyMod(float* value);
     
-    void setIndexCount(int val){indexCount_Param = val;};
+    void setIndexCount(int val){indexCount_Param = val; infoVec_preMod.resize(indexCount_Param);};
     
     ofParameterGroup getParameterGroup(){return parameters;};
+    void setParameterGroup(ofParameterGroup &newGroup);
     
 private:
     //Parameters

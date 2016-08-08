@@ -10,6 +10,8 @@
 static const int NUM_BARS = 11;
 static const int PIXEL_X_BAR = 432;
 
+#define MULTIPLE_OSC;
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -40,6 +42,11 @@ class ofApp : public ofBaseApp{
     
     phasorClass phasor;
     elementOscilator singleGenerator;
+#ifdef MULTIPLE_OSC
+    elementOscilator singleGenerator2;
+    vector<float>   infoVec2;
+    parametersControl   paramsControl2;
+#endif
     delayControl     delayControler;
     
     parametersControl paramsControl;

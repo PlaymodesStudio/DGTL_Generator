@@ -11,8 +11,15 @@ void ofApp::setup(){
     pixelNum = PIXEL_X_BAR;
     
     //Setup the generator of waves and pass it the numbers of items it will have
-    singleGenerator.setup();
     singleGenerator.setIndexCount(pixelNum);
+    singleGenerator.setup();
+    
+#ifdef MULTIPLE_OSC
+    singleGenerator2.setIndexCount(pixelNum);
+    singleGenerator2.setParameterGroup(singleGenerator.getParameterGroup());
+//    singleGenerator2.setup();
+    infoVec2.resize(pixelNum, 0);
+#endif
     
     //Initialize the calculator of index modifications in delaying the info calulated by the singleGenerator
     delayControler.setup();
@@ -42,11 +49,19 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     paramsControl.update();
+//    paramsControl2.update();
     
     //Phasor updates automatically at audio rate
     
     //Calculation of the oscilators for each element, with phasor info
     singleGenerator.computeFunc(infoVec.data(), phasor.getPhasor());
+    
+#ifdef MULTIPLE_OSC
+    singleGenerator2.computeFunc(infoVec2.data(), 1-phasor.getPhasor());
+    for (int i=0; i< infoVec.size() ; i++){
+        infoVec[i] = max(infoVec[i], infoVec2[i]);
+    }
+#endif
     
     //Fill the fbo with the information in infoVec, and delaying it and modifing with it's controls
     delayControler.applyDelayToTexture(pixelContent, infoVec);

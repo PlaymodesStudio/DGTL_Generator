@@ -33,8 +33,6 @@ void elementOscilator::setup(){
     parameters.add(pow_Param.set("Pow", 1, -40, 40));
     parameters.add(pwm_Param.set("Square PWM", 0.5, 0, 1));
     parameters.add(waveSelect_Param.set("Wave Select", 0, 0, 7));
-    
-    infoVec_preMod.resize(indexCount_Param);
 }
 
 void elementOscilator::computeFunc(float *infoVec, float phasor){
@@ -188,6 +186,40 @@ void elementOscilator::computeMultiplyMod(float *value){
     
     *value = ofClamp(*value, 0, 1);
     
+}
+
+void elementOscilator::setParameterGroup(ofParameterGroup &newGroup){
+    freq_Param = newGroup.getFloat(0);
+    phaseOffset_Param = newGroup.getFloat(1);
+    invert_Param = newGroup.getBool(2);
+    symmetry_Param = newGroup.getInt(3);
+    indexOffset_Param = newGroup.getInt(4);
+    indexQuant_Param = newGroup.getInt(5);
+    comb_Param = newGroup.getFloat(6);
+    modulo_Param = newGroup.getInt(7);
+    randomAdd_Param = newGroup.getFloat(8);
+    quant_Param = newGroup.getInt(9);
+    scale_Param = newGroup.getFloat(10);
+    offset_Param = newGroup.getFloat(11);
+    pow_Param = newGroup.getInt(12);
+    pwm_Param = newGroup.getFloat(13);
+    waveSelect_Param = newGroup.getInt(14);
+    
+    //    freq_Param.setParent(newGroup);
+    //    phaseOffset_Param.setParent(newGroup);
+    //    invert_Param.setParent(newGroup);
+    //    symmetry_Param.setParent(newGroup);
+    //    indexOffset_Param.setParent(newGroup);
+    //    indexQuant_Param.setParent(newGroup);
+    //    comb_Param.setParent(newGroup);
+    //    modulo_Param.setParent(newGroup);
+    //    randomAdd_Param.setParent(newGroup);
+    //    quant_Param.setParent(newGroup);
+    //    scale_Param.setParent(newGroup);
+    //    offset_Param.setParent(newGroup);
+    //    pow_Param.setParent(newGroup);
+    //    pwm_Param.setParent(newGroup);
+    //    waveSelect_Param.setParent(newGroup);
 }
 
 
