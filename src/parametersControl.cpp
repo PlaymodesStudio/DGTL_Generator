@@ -125,7 +125,7 @@ void parametersControl::update(){
         }
     }
     
-    //MIDI
+    //MIDI - Process the midi deque
     while(midiMessages.size() > 0){
         int parameterNum = midiMessages[0].control;
         int parameterVal = midiMessages[0].value;
@@ -368,5 +368,6 @@ void parametersControl::listenerFunction(ofAbstractParameter& e){
 }
 
 void parametersControl::newMidiMessage(ofxMidiMessage &eventArgs){
+    //Save all midi messages into a que;
     midiMessages.push_back(eventArgs);
 }
