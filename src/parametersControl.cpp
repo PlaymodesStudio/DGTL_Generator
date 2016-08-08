@@ -124,6 +124,56 @@ void parametersControl::update(){
                 oscilatorParams.getBool(splitAddress[2]) = m.getArgAsBool(0);
         }
     }
+    
+    //MIDI
+    while(midiMessages.size() > 0){
+        int parameterNum = midiMessages[0].control;
+        int parameterVal = midiMessages[0].value;
+        
+        //get the grup in each iteration
+        ofParameterGroup groupParam;
+        if(parameterNum > phasorParams.size()-1){
+            if(parameterNum > (phasorParams.size() + oscilatorParams.size() -1 )){
+                if(parameterNum > (phasorParams.size() + oscilatorParams.size() + delayParams.size() -1))
+                    return;
+                parameterNum -= (phasorParams.size() + oscilatorParams.size());
+                groupParam = delayParams;
+            }
+            else{
+                parameterNum -= phasorParams.size();
+                groupParam = oscilatorParams;
+            }
+        }
+        else{
+            groupParam = phasorParams;
+        }
+        
+        //Iterate for all parameters in parametergroup and look for the type of the parameter
+        ofAbstractParameter &absParam = groupParam.get(parameterNum);
+        if(absParam.type() == typeid(ofParameter<float>).name()){
+            //Cast it
+            ofParameter<float> castedParam = absParam.cast<float>();
+            
+            //get the value of that parameter and map it
+            castedParam = (ofMap(parameterVal, 0, 127, castedParam.getMin(), castedParam.getMax(), true));
+        }
+        if(absParam.type() == typeid(ofParameter<int>).name()){
+            ofParameter<int> castedParam = absParam.cast<int>();
+            int range = castedParam.getMax()-castedParam.getMin();
+            if(range < 128)
+                castedParam = ofMap(parameterVal, 0, ((int)(128/(range))*range), castedParam.getMin(), castedParam.getMax(), true);
+            else
+                castedParam = ofMap(parameterVal, 0, range/ceil((float)range/(float)128), castedParam.getMin(), castedParam.getMax(), true);
+            
+        }
+        if(absParam.type() == typeid(ofParameter<bool>).name()){
+            ofParameter<bool> castedParam = absParam.cast<bool>();
+            
+            //get the value of that parameter and map it
+            castedParam.set(parameterVal >= 64 ? true : false);
+        }
+        midiMessages.pop_front();
+    }
 }
 
 
@@ -318,49 +368,5 @@ void parametersControl::listenerFunction(ofAbstractParameter& e){
 }
 
 void parametersControl::newMidiMessage(ofxMidiMessage &eventArgs){
-    int parameterNum = eventArgs.control;
-    int parameterVal = eventArgs.value;
-    
-        //get the grup in each iteration
-        ofParameterGroup groupParam;
-    if(parameterNum > phasorParams.size()-1){
-        if(parameterNum > (phasorParams.size() + oscilatorParams.size() -1 )){
-            if(parameterNum > (phasorParams.size() + oscilatorParams.size() + delayParams.size() -1))
-                return;
-            parameterNum -= (phasorParams.size() + oscilatorParams.size());
-            groupParam = delayParams;
-        }
-        else{
-            parameterNum -= phasorParams.size();
-            groupParam = oscilatorParams;
-        }
-    }
-    else{
-        groupParam = phasorParams;
-    }
-    
-    //Iterate for all parameters in parametergroup and look for the type of the parameter
-    ofAbstractParameter &absParam = groupParam.get(parameterNum);
-    if(absParam.type() == typeid(ofParameter<float>).name()){
-        //Cast it
-        ofParameter<float> castedParam = absParam.cast<float>();
-        
-        //get the value of that parameter and map it
-        castedParam = (ofMap(parameterVal, 0, 127, castedParam.getMin(), castedParam.getMax(), true));
-    }
-    if(absParam.type() == typeid(ofParameter<int>).name()){
-        ofParameter<int> castedParam = absParam.cast<int>();
-        int range = castedParam.getMax()-castedParam.getMin();
-        if(range < 128)
-            castedParam = ofMap(parameterVal, 0, ((int)(128/(range))*range), castedParam.getMin(), castedParam.getMax(), true);
-        else
-            castedParam = ofMap(parameterVal, 0, range/ceil((float)range/(float)128), castedParam.getMin(), castedParam.getMax(), true);
-        
-    }
-    if(absParam.type() == typeid(ofParameter<bool>).name()){
-        ofParameter<bool> castedParam = absParam.cast<bool>();
-       
-        //get the value of that parameter and map it
-        castedParam.set(parameterVal >= 64 ? true : false);
-    }
+    midiMessages.push_back(eventArgs);
 }

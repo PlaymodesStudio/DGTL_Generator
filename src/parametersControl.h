@@ -54,6 +54,8 @@ private:
     
     ofxMidiOut midiOut;
     ofxMidiIn   midiIn;
+    
+    deque<ofxMidiMessage> midiMessages;
 };
 
 
