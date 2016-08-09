@@ -16,7 +16,8 @@ void ofApp::setup(){
     
 #ifdef MULTIPLE_OSC
     singleGenerator2.setIndexCount(pixelNum);
-    singleGenerator2.setParameterGroup(singleGenerator.getParameterGroup());
+    singleGenerator2.setup();
+    //singleGenerator2.setParameterGroup(singleGenerator.getParameterGroup());
 //    singleGenerator2.setup();
     infoVec2.resize(pixelNum, 0);
 #endif
@@ -57,7 +58,8 @@ void ofApp::update(){
     singleGenerator.computeFunc(infoVec.data(), phasor.getPhasor());
     
 #ifdef MULTIPLE_OSC
-    singleGenerator2.computeFunc(infoVec2.data(), 1-phasor.getPhasor());
+    singleGenerator2.computeFunc(infoVec2.data(), phasor.getPhasor());
+    reverse(infoVec2.begin(), infoVec2.end());
     for (int i=0; i< infoVec.size() ; i++){
         infoVec[i] = max(infoVec[i], infoVec2[i]);
     }
