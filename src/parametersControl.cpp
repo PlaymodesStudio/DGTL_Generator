@@ -130,6 +130,8 @@ void parametersControl::update(){
         int parameterNum = midiMessages[0].control;
         int parameterVal = midiMessages[0].value;
         
+        midiMessages.pop_front();
+        
         //get the grup in each iteration
         ofParameterGroup groupParam;
         if(parameterNum > phasorParams.size()-1){
@@ -157,7 +159,7 @@ void parametersControl::update(){
             //get the value of that parameter and map it
             castedParam = (ofMap(parameterVal, 0, 127, castedParam.getMin(), castedParam.getMax(), true));
         }
-        if(absParam.type() == typeid(ofParameter<int>).name()){
+        else if(absParam.type() == typeid(ofParameter<int>).name()){
             ofParameter<int> castedParam = absParam.cast<int>();
             int range = castedParam.getMax()-castedParam.getMin();
             if(range < 128)
@@ -166,13 +168,12 @@ void parametersControl::update(){
                 castedParam = ofMap(parameterVal, 0, range/ceil((float)range/(float)128), castedParam.getMin(), castedParam.getMax(), true);
             
         }
-        if(absParam.type() == typeid(ofParameter<bool>).name()){
+        else if(absParam.type() == typeid(ofParameter<bool>).name()){
             ofParameter<bool> castedParam = absParam.cast<bool>();
             
             //get the value of that parameter and map it
             castedParam.set(parameterVal >= 64 ? true : false);
         }
-        midiMessages.pop_front();
     }
 }
 
@@ -369,5 +370,5 @@ void parametersControl::listenerFunction(ofAbstractParameter& e){
 
 void parametersControl::newMidiMessage(ofxMidiMessage &eventArgs){
     //Save all midi messages into a que;
-    midiMessages.push_back(eventArgs);
+    midiMessages.push_front(eventArgs);
 }

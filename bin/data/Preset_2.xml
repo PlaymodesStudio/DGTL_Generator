@@ -4,12 +4,13 @@
 		<Beats_Div>1</Beats_Div>
 		<Beats_Mult>1</Beats_Mult>
 		<Quantization>40</Quantization>
-		<Initial_phase>0</Initial_phase>
+		<Initial_phase>0.425197</Initial_phase>
 		<Reset_Phase>0</Reset_Phase>
 		<Loop>1</Loop>
+		<Bounce>1</Bounce>
 	</phasor>
 	<oscillator>
-		<n_Waves>1</n_Waves>
+		<n_Waves>2.64567</n_Waves>
 		<Phase_offset>0</Phase_offset>
 		<Invert>0</Invert>
 		<Symmetry>0</Symmetry>
@@ -27,8 +28,8 @@
 	</oscillator>
 	<delay>
 		<Delay>1</Delay>
-		<Invert>0</Invert>
-		<Symmetry>0</Symmetry>
+		<Invert_Delay>1</Invert_Delay>
+		<Symmetry>1</Symmetry>
 		<Combination>0</Combination>
 	</delay>
 </PRESET>
