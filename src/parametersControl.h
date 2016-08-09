@@ -31,6 +31,7 @@ public:
     void onGuiToggleEvent(ofxDatGuiToggleEvent e);
     void onGuiDropdownEvent(ofxDatGuiDropdownEvent e);
     void onGuiMatrixEvent(ofxDatGuiMatrixEvent e);
+    void onGuiSliderEvent(ofxDatGuiSliderEvent e);
     
     void listenerFunction(ofAbstractParameter& e);
     

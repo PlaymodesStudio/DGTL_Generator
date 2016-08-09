@@ -61,6 +61,7 @@ void parametersControl::setup(){
     datGui->onButtonEvent(this, &parametersControl::onGuiButtonEvent);
     datGui->onToggleEvent(this, &parametersControl::onGuiToggleEvent);
     datGui->onDropdownEvent(this, &parametersControl::onGuiDropdownEvent);
+    datGui->onSliderEvent(this, &parametersControl::onGuiSliderEvent);
     
     
     //add listerners for midi sending when parameter is changed
@@ -305,9 +306,8 @@ void parametersControl::loadPreset(int presetNum){
             //reset Phasor
             phasorParams.getBool("Reset Phase") = true;
         }
-        
-        cout<<"Load Preset_" << presetNum<<endl;
     }
+    cout<<"Load Preset_" << presetNum<<endl;
     vector<int> tempVec;
     tempVec.push_back(presetNum-1);
     presetMatrix->setSelected(tempVec);
@@ -342,8 +342,16 @@ void parametersControl::onGuiDropdownEvent(ofxDatGuiDropdownEvent e){
 void parametersControl::onGuiMatrixEvent(ofxDatGuiMatrixEvent e){
     if(ofGetKeyPressed(OF_KEY_SHIFT))
         savePreset(e.child+1);
-    else
+    else{
         loadPreset(e.child+1);
+        if(autoPreset)
+            presetChangedTimeStamp = ofGetElapsedTimef();
+    }
+}
+
+void parametersControl::onGuiSliderEvent(ofxDatGuiSliderEvent e){
+    if(e.target->getName() == "Beats Period")
+        periodTime = e.value / phasorParams.getFloat(0) * 60.;
 }
 
 
