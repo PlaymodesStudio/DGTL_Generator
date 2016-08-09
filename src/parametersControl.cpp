@@ -68,15 +68,20 @@ void parametersControl::setup(){
     ofAddListener(oscilatorParams.parameterChangedE(), this, &parametersControl::listenerFunction);
     ofAddListener(delayParams.parameterChangedE(), this, &parametersControl::listenerFunction);
     
-    //OSC
-    oscReceiver.setup(12345);
-    
-    presetMatrix = datGui->addMatrix("Presets", 24, true);
+    //Preset Control
+    presetMatrix = datGui->addMatrix("Presets", 32, true);
     presetMatrix->setRadioMode(true);
     presetMatrix->setOpacity(.75);
     
     presetMatrix->onMatrixEvent(this, &parametersControl::onGuiMatrixEvent);
     
+    datGui->addToggle("Automatic Preset");
+    datGui->addSlider(averagePeriod.set("Average Period", 5, 0, 10));
+    
+    //OSC
+    oscReceiver.setup(12345);
+    
+ 
     
     
     //MIDI
@@ -87,6 +92,7 @@ void parametersControl::setup(){
     
     
     loadPreset(1);
+    presetChangedTimeStamp = ofGetElapsedTimef();
 }
 
 
@@ -174,6 +180,13 @@ void parametersControl::update(){
             //get the value of that parameter and map it
             castedParam.set(parameterVal >= 64 ? true : false);
         }
+    }
+    
+    
+    //Auto preset
+    if(autoPreset && (ofGetElapsedTimef()-presetChangedTimeStamp) > averagePeriod+ofRandom(-1, 1)){
+        presetChangedTimeStamp = ofGetElapsedTimef();
+        loadPreset(ofRandom(32));
     }
 }
 
@@ -290,6 +303,9 @@ void parametersControl::loadPreset(int presetNum){
             xml.setToParent();
         }
     }
+    vector<int> tempVec;
+    tempVec.push_back(presetNum-1);
+    presetMatrix->setSelected(tempVec);
 }
 
 void parametersControl::onGuiButtonEvent(ofxDatGuiButtonEvent e){
@@ -306,6 +322,9 @@ void parametersControl::onGuiToggleEvent(ofxDatGuiToggleEvent e){
         delayParams.getBool("Invert Delay") = e.target->getChecked();
     if(e.target->getName() == "Bounce")
         phasorParams.getBool("Bounce") = e.target->getChecked();
+    if(e.target->getName() == "Automatic Preset")
+        autoPreset = e.target->getChecked();
+    
 }
 
 void parametersControl::onGuiDropdownEvent(ofxDatGuiDropdownEvent e){
