@@ -76,7 +76,7 @@ void parametersControl::setup(){
     presetMatrix->onMatrixEvent(this, &parametersControl::onGuiMatrixEvent);
     
     datGui->addToggle("Automatic Preset");
-    datGui->addSlider(averagePeriod.set("Average Period", 5, 0, 10));
+    datGui->addSlider(presetChangeBeatsPeriod.set("Beats Period", 4, 1, 120));
     
     //OSC
     oscReceiver.setup(12345);
@@ -93,6 +93,7 @@ void parametersControl::setup(){
     
     loadPreset(1);
     presetChangedTimeStamp = ofGetElapsedTimef();
+    periodTime = presetChangeBeatsPeriod / phasorParams.getFloat("BPM") * 60.;
 }
 
 
@@ -184,9 +185,9 @@ void parametersControl::update(){
     
     
     //Auto preset
-    if(autoPreset && (ofGetElapsedTimef()-presetChangedTimeStamp) > averagePeriod+ofRandom(-1, 1)){
-        presetChangedTimeStamp = ofGetElapsedTimef();
-        loadPreset(ofRandom(32));
+    if(autoPreset && (ofGetElapsedTimef()-presetChangedTimeStamp) > periodTime){
+        presetChangedTimeStamp = presetChangedTimeStamp+periodTime;
+        loadPreset(ofRandom(23)+1);
     }
 }
 
@@ -247,7 +248,7 @@ void parametersControl::savePreset(int presetNum){
         }
         xml.setToParent();
     }
-    
+    cout<<"Save Preset_" << presetNum<<endl;
     xml.save("Preset_"+ofToString(presetNum)+".xml");
 }
 
@@ -301,7 +302,11 @@ void parametersControl::loadPreset(int presetNum){
             }
             //Jump one label before in xml structure
             xml.setToParent();
+            //reset Phasor
+            phasorParams.getBool("Reset Phase") = true;
         }
+        
+        cout<<"Load Preset_" << presetNum<<endl;
     }
     vector<int> tempVec;
     tempVec.push_back(presetNum-1);
@@ -322,8 +327,10 @@ void parametersControl::onGuiToggleEvent(ofxDatGuiToggleEvent e){
         delayParams.getBool("Invert Delay") = e.target->getChecked();
     if(e.target->getName() == "Bounce")
         phasorParams.getBool("Bounce") = e.target->getChecked();
-    if(e.target->getName() == "Automatic Preset")
+    if(e.target->getName() == "Automatic Preset"){
         autoPreset = e.target->getChecked();
+        presetChangedTimeStamp = ofGetElapsedTimef();
+    }
     
 }
 
@@ -353,6 +360,8 @@ void parametersControl::listenerFunction(ofAbstractParameter& e){
             position += phasorParams.size();
         else if(castedParam.getFirstParent().getName() == "delay")
             position += phasorParams.size() + oscilatorParams.size();
+        if(castedParam.getName() == "BPM")
+            periodTime = presetChangeBeatsPeriod / castedParam * 60.;
     }
     else if(e.type() == typeid(ofParameter<int>).name()){
         ofParameter<int> castedParam = e.cast<int>();

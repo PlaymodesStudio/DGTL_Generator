@@ -49,7 +49,7 @@ private:
     ofxDatGuiMatrix* presetMatrix;
     
     ofParameter<bool> autoPreset;
-    ofParameter<float> averagePeriod;
+    ofParameter<float> presetChangeBeatsPeriod;
     
     ofxOscReceiver oscReceiver;
     
@@ -61,6 +61,7 @@ private:
     deque<ofxMidiMessage> midiMessages;
     
     float   presetChangedTimeStamp;
+    float   periodTime;
 };
 
 
