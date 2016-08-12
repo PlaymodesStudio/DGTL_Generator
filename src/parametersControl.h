@@ -31,6 +31,8 @@ public:
     void setup();
     void update();
     
+    int getGuiWidth(){return datGui->getWidth();};
+    
     void onGuiButtonEvent(ofxDatGuiButtonEvent e);
     void onGuiToggleEvent(ofxDatGuiToggleEvent e);
     void onGuiDropdownEvent(ofxDatGuiDropdownEvent e);

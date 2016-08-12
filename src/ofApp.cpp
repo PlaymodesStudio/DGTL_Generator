@@ -37,6 +37,8 @@ void ofApp::setup(){
     paramsControl.bindOscilatorParams(singleGenerator.getParameterGroup());
     paramsControl.bindDelayParams(delayControler.getParameterGroup());
     paramsControl.setup();
+    
+    guiWidth = paramsControl.getGuiWidth();
 }
 
 //--------------------------------------------------------------
@@ -59,24 +61,25 @@ void ofApp::update(){
 void ofApp::draw(){
     ofSetColor(255);
     
+    int contentWidth = ofGetWidth()-guiWidth;
     //Draw the fbo
-    pixelContent.draw(0,0, ofGetWidth(), 5*ofGetHeight()/11);
+    pixelContent.draw(guiWidth,0, contentWidth, 5*ofGetHeight()/11);
     
     //Draw the Bars
-    float wid = (float)ofGetWidth()/pixelNum;
+    float wid = (float)contentWidth/pixelNum;
     float hei = 5*ofGetHeight()/11;
     for(int i = 0; i < pixelNum; i++)
-        ofDrawRectangle(i*wid, (1-infoVec[i])*hei+hei, wid, infoVec[i]*hei);
+        ofDrawRectangle(guiWidth+(i*wid), (1-infoVec[i])*hei+hei, wid, infoVec[i]*hei);
     
     
     //draw the phasor evolution
-    ofDrawTriangle(0, ofGetHeight(), ofGetWidth(), ofGetHeight(), ofGetWidth(), 10*ofGetHeight()/11);
+    ofDrawTriangle(guiWidth, ofGetHeight(), ofGetWidth(), ofGetHeight(), ofGetWidth(), 10*ofGetHeight()/11);
     ofSetColor(127);
-    ofDrawRectangle((float)ofGetWidth() * phasor.getPhasor(), 10*ofGetHeight()/11, 5, ofGetHeight()/11);
+    ofDrawRectangle(((float)contentWidth * phasor.getPhasor())+guiWidth, 10*ofGetHeight()/11, 5, ofGetHeight()/11);
     
     //Draw the framerate
     ofSetColor(255, 0,0);
-    ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, ofGetHeight()-20);
+    ofDrawBitmapString(ofToString(ofGetFrameRate()), guiWidth+20, ofGetHeight()-20);
 }
 
 //--------------------------------------------------------------

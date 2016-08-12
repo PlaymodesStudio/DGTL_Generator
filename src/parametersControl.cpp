@@ -12,9 +12,10 @@ void parametersControl::setup(){
     //DatGui
     
     ofxDatGuiLog::quiet();
+    ofxDatGui::setAssetPath("");
     
     datGui = new ofxDatGui();
-    datGui->addHeader();
+//    datGui->addHeader();
     datGui->setPosition(ofxDatGuiAnchor::TOP_LEFT);
     //PHASPR
     datGui->addSlider(phasorParams.getFloat("BPM"));// bpm_Param.set("BPM", 60, 30, 180));

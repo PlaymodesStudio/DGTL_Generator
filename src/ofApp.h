@@ -43,5 +43,7 @@ class ofApp : public ofBaseApp{
     delayControl     delayControler;
     
     parametersControl paramsControl;
+    
+    int guiWidth;
 		
 };
