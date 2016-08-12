@@ -1,12 +1,13 @@
 <PRESET>
 	<phasor>
-		<BPM>120</BPM>
+		<BPM>126.947</BPM>
 		<Beats_Div>8</Beats_Div>
 		<Beats_Mult>1</Beats_Mult>
 		<Quantization>40</Quantization>
 		<Initial_phase>0</Initial_phase>
 		<Reset_Phase>0</Reset_Phase>
 		<Loop>1</Loop>
+		<Bounce>0</Bounce>
 	</phasor>
 	<oscillator>
 		<n_Waves>1</n_Waves>
@@ -27,8 +28,8 @@
 	</oscillator>
 	<delay>
 		<Delay>2</Delay>
-		<Invert>1</Invert>
+		<Invert_Delay>0</Invert_Delay>
 		<Symmetry>0</Symmetry>
-		<Combination>0.83</Combination>
+		<Combination>0</Combination>
 	</delay>
 </PRESET>

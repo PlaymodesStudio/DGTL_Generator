@@ -1,7 +1,7 @@
 <PRESET>
 	<phasor>
-		<BPM>120</BPM>
-		<Beats_Div>1</Beats_Div>
+		<BPM>126.379</BPM>
+		<Beats_Div>4</Beats_Div>
 		<Beats_Mult>1</Beats_Mult>
 		<Quantization>40</Quantization>
 		<Initial_phase>0</Initial_phase>
@@ -22,7 +22,7 @@
 		<Quantization>0</Quantization>
 		<Scale>1</Scale>
 		<Offset>0</Offset>
-		<Pow>1</Pow>
+		<Pow>33</Pow>
 		<Square_PWM>0.5</Square_PWM>
 		<Wave_Select>0</Wave_Select>
 	</oscillator>

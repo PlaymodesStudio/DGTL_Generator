@@ -1,6 +1,6 @@
 <PRESET>
 	<phasor>
-		<BPM>120</BPM>
+		<BPM>127.15</BPM>
 		<Beats_Div>4</Beats_Div>
 		<Beats_Mult>1</Beats_Mult>
 		<Quantization>40</Quantization>
@@ -18,7 +18,7 @@
 		<Index_Quantization>1</Index_Quantization>
 		<Combination>0</Combination>
 		<Modulo>432</Modulo>
-		<Random_addition>0</Random_addition>
+		<Random_addition>0.255906</Random_addition>
 		<Quantization>0</Quantization>
 		<Scale>1</Scale>
 		<Offset>0</Offset>
@@ -27,7 +27,7 @@
 		<Wave_Select>0</Wave_Select>
 	</oscillator>
 	<delay>
-		<Delay>9</Delay>
+		<Delay>7</Delay>
 		<Invert_Delay>0</Invert_Delay>
 		<Symmetry>0</Symmetry>
 		<Combination>0</Combination>

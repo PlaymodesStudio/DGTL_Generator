@@ -1,7 +1,7 @@
 <PRESET>
 	<phasor>
-		<BPM>124</BPM>
-		<Beats_Div>1</Beats_Div>
+		<BPM>126.331</BPM>
+		<Beats_Div>4</Beats_Div>
 		<Beats_Mult>1</Beats_Mult>
 		<Quantization>40</Quantization>
 		<Initial_phase>0.99</Initial_phase>
