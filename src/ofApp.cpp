@@ -11,12 +11,14 @@ void ofApp::setup(){
     pixelNum = PIXEL_X_BAR;
     
     //Setup the generator of waves and pass it the numbers of items it will have
-    singleGenerator.setup();
     singleGenerator.setIndexCount(pixelNum);
+    singleGenerator.setup();
+    
     
     //Initialize the calculator of index modifications in delaying the info calulated by the singleGenerator
-    delayControler.setup();
     delayControler.setIndexCount(NUM_BARS);
+    delayControler.setup();
+    
     
     //Initialize our vector that stores the information of the oscilators
     infoVec.resize(pixelNum, 0);

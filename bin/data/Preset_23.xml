@@ -17,7 +17,7 @@
 		<Index_Offset>0</Index_Offset>
 		<Index_Quantization>1</Index_Quantization>
 		<Combination>0</Combination>
-		<Modulo>432</Modulo>
+		<Modulo>504</Modulo>
 		<Random_addition>-0.00393701</Random_addition>
 		<Quantization>1</Quantization>
 		<Scale>0.507874</Scale>

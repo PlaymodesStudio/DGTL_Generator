@@ -15,9 +15,9 @@
 		<Invert>0</Invert>
 		<Symmetry>1</Symmetry>
 		<Index_Offset>0</Index_Offset>
-		<Index_Quantization>48</Index_Quantization>
+		<Index_Quantization>56</Index_Quantization>
 		<Combination>0</Combination>
-		<Modulo>432</Modulo>
+		<Modulo>504</Modulo>
 		<Random_addition>-0.0669291</Random_addition>
 		<Quantization>0</Quantization>
 		<Scale>1.00394</Scale>

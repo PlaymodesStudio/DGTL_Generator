@@ -7,6 +7,7 @@
 		<Initial_phase>0</Initial_phase>
 		<Reset_Phase>0</Reset_Phase>
 		<Loop>1</Loop>
+		<Bounce>0</Bounce>
 	</phasor>
 	<oscillator>
 		<n_Waves>2</n_Waves>
@@ -16,7 +17,7 @@
 		<Index_Offset>0</Index_Offset>
 		<Index_Quantization>1</Index_Quantization>
 		<Combination>0</Combination>
-		<Modulo>432</Modulo>
+		<Modulo>504</Modulo>
 		<Random_addition>0</Random_addition>
 		<Quantization>0</Quantization>
 		<Scale>1</Scale>
@@ -27,7 +28,7 @@
 	</oscillator>
 	<delay>
 		<Delay>1</Delay>
-		<Invert>0</Invert>
+		<Invert_Delay>0</Invert_Delay>
 		<Symmetry>1</Symmetry>
 		<Combination>0</Combination>
 	</delay>
