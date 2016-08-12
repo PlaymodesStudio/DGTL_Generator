@@ -13,6 +13,8 @@
 #include "ofxOsc.h"
 #include "ofxDatGui.h"
 #include "ofxMidi.h"
+#include "bpmControl.h"
+
 
 class parametersControl: public ofxMidiListener{
 public:
@@ -51,6 +53,7 @@ private:
     
     ofParameter<bool> autoPreset;
     ofParameter<float> presetChangeBeatsPeriod;
+    ofParameter<bool>   bpmTracker;
     
     ofxOscReceiver oscReceiver;
     
@@ -63,6 +66,10 @@ private:
     
     float   presetChangedTimeStamp;
     float   periodTime;
+    
+    
+    //BPM Detect
+    bpmControl beatTracker;
 };
 
 

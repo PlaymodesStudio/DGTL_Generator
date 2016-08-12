@@ -1,3 +1,4 @@
+ofxAubio
 ofxDatGui_PM
 ofxMidi
 ofxOsc

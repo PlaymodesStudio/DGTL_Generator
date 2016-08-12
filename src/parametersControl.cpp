@@ -95,10 +95,19 @@ void parametersControl::setup(){
     loadPreset(1);
     presetChangedTimeStamp = ofGetElapsedTimef();
     periodTime = presetChangeBeatsPeriod / phasorParams.getFloat("BPM") * 60.;
+    
+    
+    //Beat Detector
+    beatTracker.setup();
+    bpmTracker = false;
+    datGui->addToggle("BPM Tracker");
 }
 
 
 void parametersControl::update(){
+    if(bpmTracker)
+        phasorParams.getFloat(0) = beatTracker.getBpm();
+    
     while(oscReceiver.hasWaitingMessages()){
         ofxOscMessage m;
         oscReceiver.getNextMessage(m);
@@ -331,6 +340,8 @@ void parametersControl::onGuiToggleEvent(ofxDatGuiToggleEvent e){
         autoPreset = e.target->getChecked();
         presetChangedTimeStamp = ofGetElapsedTimef();
     }
+    if(e.target->getName() == "BPM Tracker")
+        bpmTracker = e.target->getChecked();
     
 }
 
