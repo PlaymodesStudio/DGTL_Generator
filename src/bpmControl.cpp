@@ -22,5 +22,4 @@ void bpmControl::setup(){
 void bpmControl::audioIn(float * input, int bufferSize, int nChannels){
     // compute beat location
     beat.audioIn(input, bufferSize, nChannels);
-    cout<<beat.bpm<<endl;
 }

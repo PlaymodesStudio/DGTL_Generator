@@ -15,6 +15,8 @@
 #include "ofxMidi.h"
 #include "bpmControl.h"
 
+static const int NUM_PRESETS = 32;
+
 
 class parametersControl: public ofxMidiListener{
 public:
@@ -67,6 +69,8 @@ private:
     float   presetChangedTimeStamp;
     float   periodTime;
     
+    vector<int> randomPresetsArrange;
+    int presetChangeCounter;
     
     //BPM Detect
     bpmControl beatTracker;

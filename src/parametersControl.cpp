@@ -70,7 +70,7 @@ void parametersControl::setup(){
     ofAddListener(delayParams.parameterChangedE(), this, &parametersControl::listenerFunction);
     
     //Preset Control
-    presetMatrix = datGui->addMatrix("Presets", 32, true);
+    presetMatrix = datGui->addMatrix("Presets", NUM_PRESETS, true);
     presetMatrix->setRadioMode(true);
     presetMatrix->setOpacity(.75);
     
@@ -93,9 +93,15 @@ void parametersControl::setup(){
     
     
     loadPreset(1);
+    presetChangeCounter = 0;
     presetChangedTimeStamp = ofGetElapsedTimef();
     periodTime = presetChangeBeatsPeriod / phasorParams.getFloat("BPM") * 60.;
+    for(int i = 0 ; i < NUM_PRESETS ; i++)
+        randomPresetsArrange.push_back(i+1);
     
+    random_shuffle(randomPresetsArrange.begin(), randomPresetsArrange.end());
+    for(auto randomPreset : randomPresetsArrange)
+        cout<<randomPreset<< " ";
     
     //Beat Detector
     beatTracker.setup();
@@ -197,7 +203,10 @@ void parametersControl::update(){
     //Auto preset
     if(autoPreset && (ofGetElapsedTimef()-presetChangedTimeStamp) > periodTime){
         presetChangedTimeStamp = presetChangedTimeStamp+periodTime;
-        loadPreset(ofRandom(23)+1);
+        loadPreset(randomPresetsArrange.at(presetChangeCounter));
+        presetChangeCounter++;
+        if(presetChangeCounter >= NUM_PRESETS)
+            presetChangeCounter = 0;
     }
 }
 
