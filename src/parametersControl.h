@@ -15,7 +15,7 @@
 #include "ofxMidi.h"
 #include "bpmControl.h"
 
-static const int NUM_PRESETS = 32;
+static const int NUM_PRESETS = 40;
 
 
 class parametersControl: public ofxMidiListener{
