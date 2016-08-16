@@ -14,6 +14,7 @@ void delayControl::setup(){
     parameters.add(invert_Param.set("Invert Delay", false));
     parameters.add(symmetry_Param.set("Symmetry", 0, 0, 10));
     parameters.add(comb_Param.set("Combination", 0, 0, 1));
+    parameters.add(delay_sixteenth.set("Delay Sixteenth", 0, 0, 16));
 }
 
 
@@ -41,7 +42,7 @@ int delayControl::computeFunc(int index){
 }
 
 
-void delayControl::applyDelayToTexture(ofFbo &fbo, vector<float> infoVec){
+void delayControl::applyDelayToTexture(ofFbo &fbo, vector<float> infoVec, float bpm){
     
     //Fill the buffer with the new info of the current frame
     infoVecBuffer.push_front(infoVec);
@@ -50,10 +51,12 @@ void delayControl::applyDelayToTexture(ofFbo &fbo, vector<float> infoVec){
     fbo.begin();
     
     //first color to black, for fixing isues
+    int delay_frames_sixteenth = ((((float)delay_sixteenth/4)/bpm*60))*40;
+    cout<<delay_frames_sixteenth<< endl;
     ofSetColor(0);
     for(int j = 0 ; j < fbo.getHeight() ; j++){
         //compute the index where there is the info we are interested
-        int delayIndex = delay_frames*(computeFunc(j));
+        int delayIndex = (delay_frames+delay_frames_sixteenth)*(computeFunc(j));
         
         //If we want to acces a position that is not existing, get the last position
         if(infoVecBuffer.size() <= delayIndex) delayIndex = 0;
@@ -68,6 +71,6 @@ void delayControl::applyDelayToTexture(ofFbo &fbo, vector<float> infoVec){
     
     
     //If we have values that we will not use anymore, they are too far away, remove them
-    while(infoVecBuffer.size() > delay_frames*fbo.getHeight())
+    while(infoVecBuffer.size() > (delay_frames+delay_frames_sixteenth)*fbo.getHeight())
         infoVecBuffer.pop_back();
 }

@@ -18,7 +18,7 @@ public:
     
     void setup();
     int computeFunc(int index);
-    void applyDelayToTexture(ofFbo &fbo, vector<float> infoVec);
+    void applyDelayToTexture(ofFbo &fbo, vector<float> infoVec, float bpm);
     
     void setIndexCount(int indexCount){indexCount_Param = indexCount;};
     
@@ -34,6 +34,7 @@ private:
     ofParameter<int>    symmetry_Param;
     ofParameter<float>  comb_Param;
     ofParameter<int>    delay_frames;
+    ofParameter<int>    delay_sixteenth;
     
     //Buffer of intoVec, we use deque to be able to create a circular buffer, erase the old values
     deque<vector<float>> infoVecBuffer;

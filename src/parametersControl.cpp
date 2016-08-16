@@ -15,7 +15,8 @@ void parametersControl::setup(){
     ofxDatGui::setAssetPath("");
     
     datGui = new ofxDatGui();
-//    datGui->addHeader();
+    datGui->addHeader();
+    datGui->addFooter();
     datGui->setPosition(ofxDatGuiAnchor::TOP_LEFT);
     //PHASPR
     datGui->addSlider(phasorParams.getFloat("BPM"));// bpm_Param.set("BPM", 60, 30, 180));
@@ -57,6 +58,7 @@ void parametersControl::setup(){
     datGui->addToggle("Invert Delay")->setChecked(false);
     datGui->addSlider(delayParams.getInt("Symmetry"));
     datGui->addSlider(delayParams.getFloat("Combination"));
+    datGui->addSlider(delayParams.getInt("Delay Sixteenth"));
 
     //Gui Events
     datGui->onButtonEvent(this, &parametersControl::onGuiButtonEvent);

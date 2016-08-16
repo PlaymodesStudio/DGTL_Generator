@@ -24,7 +24,7 @@ void ofApp::setup(){
     infoVec.resize(pixelNum, 0);
     
     //Initlize our syphon and specify the name
-    syphonServer.setName("DGTL Generator");
+    syphonServer.setName("DGTL Generator_test");
     
     //Allocation of the texture, and modify to show correctly the discrete pixels
     pixelContent.allocate(PIXEL_X_BAR, NUM_BARS, GL_RGB);
@@ -53,7 +53,7 @@ void ofApp::update(){
     singleGenerator.computeFunc(infoVec.data(), phasor.getPhasor());
     
     //Fill the fbo with the information in infoVec, and delaying it and modifing with it's controls
-    delayControler.applyDelayToTexture(pixelContent, infoVec);
+    delayControler.applyDelayToTexture(pixelContent, infoVec, phasor.getParameterGroup().getFloat("BPM"));
     
     //Pass texture to syphon
     syphonServer.publishTexture(&pixelContent.getTexture());
